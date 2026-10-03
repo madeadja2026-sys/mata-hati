@@ -25,6 +25,7 @@
 <main class="app">
 <header class="top"><div class="brand"><div class="logo"><img src="icon-192.png" alt=""></div><div><b>MATA HATI</b><span>Ruang untuk makna, cerita & kepedulian</span></div></div><button id="installBtn" class="install" hidden>＋ Pasang Aplikasi</button></header>
 <section id="home" class="hero"><div class="eyebrow">SELAMAT DATANG</div><h1>Lihat dengan hati.<br>Rasakan makna.</h1><p>MATA HATI adalah ruang digital untuk berbagi inspirasi, cerita, pengetahuan, kepedulian, dan gagasan yang memberi arti bagi kehidupan.</p><div class="actions"><button class="primary" onclick="document.getElementById('jelajah').scrollIntoView()">Jelajahi MATA HATI</button><button class="ghost" id="shareBtn">Bagikan</button></div></section>
+<section id="konten" class="section"><h2>Konten Terbaru</h2><div id="cmsGrid" class="grid"><article class="card"><div class="icon">✨</div><h3>Memuat konten...</h3><p>Konten MATA HATI akan tampil di sini setelah CMS terhubung.</p></article></div></section>
 <section id="jelajah" class="section"><h2>Jelajahi</h2><div class="grid">
 <article class="card"><div class="icon">✨</div><h3>Inspirasi</h3><p>Kumpulan gagasan dan kisah yang mendorong kita untuk terus bertumbuh.</p></article>
 <article class="card"><div class="icon">📖</div><h3>Cerita</h3><p>Ruang untuk pengalaman, refleksi, dan cerita manusia yang dekat dengan kehidupan.</p></article>
@@ -36,14 +37,31 @@
 <section class="quote">“Tidak semua hal harus dilihat dengan mata. Ada hal-hal yang baru benar-benar terlihat ketika kita menggunakan hati.”</section>
 <section id="tentang" class="section"><h2>Tentang MATA HATI</h2><div class="card"><p>MATA HATI dirancang sebagai platform yang dapat berkembang menjadi portal informasi, komunitas, edukasi, publikasi, maupun aplikasi layanan digital.</p></div></section>
 </main>
-<nav class="bottom"><button class="nav active" onclick="go('home',this)">⌂<br>Beranda</button><button class="nav" onclick="go('jelajah',this)">✦<br>Jelajah</button><button class="nav" onclick="go('tentang',this)">♡<br>Tentang</button></nav>
+<nav class="bottom"><button class="nav active" onclick="go('home',this)">⌂<br>Beranda</button><button class="nav" onclick="go('konten',this)">✦<br>Jelajah</button><button class="nav" onclick="go('tentang',this)">♡<br>Tentang</button></nav>
+<script src="cms-config.js"></script>
 <script>
 let deferredPrompt;const b=document.getElementById('installBtn');
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;b.hidden=false});
 b.onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;b.hidden=true};
 document.getElementById('shareBtn').onclick=async()=>{try{await navigator.share({title:'MATA HATI',text:'Lihat MATA HATI — ruang untuk makna, cerita & kepedulian.',url:location.href})}catch(e){try{await navigator.clipboard.writeText(location.href);alert('Alamat MATA HATI disalin.')}catch(_){}}};
 function go(id,el){document.getElementById(id).scrollIntoView({behavior:'smooth'});document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
+function renderCMS(items){
+ const grid=document.getElementById('cmsGrid');
+ if(!items||!items.length){grid.innerHTML='<article class="card"><div class="icon">📝</div><h3>Belum ada konten publik</h3><p>Konten yang dipublikasikan melalui Admin MATA HATI akan muncul di sini.</p></article>';return}
+ grid.innerHTML=items.map(x=>'<article class="card">'+(x.MediaURL?'<img src="'+escCMS(x.MediaURL)+'" alt="" style="width:100%;height:180px;object-fit:cover;border-radius:14px;margin-bottom:10px">':'<div class="icon">✨</div>')+'<div class="eyebrow">'+escCMS(x.Kategori||'MATA HATI')+'</div><h3>'+escCMS(x.Judul||'Tanpa judul')+'</h3><p>'+escCMS(x.Ringkasan||'')+'</p>'+(x.VideoURL?'<p><a href="'+escCMS(x.VideoURL)+'" target="_blank" rel="noopener" style="color:var(--a)">▶ Tonton video</a></p>':'')+'</article>').join('');
+}
+function escCMS(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function loadCMS(){
+ const url=window.MATA_HATI_CMS_API;
+ if(!url)return;
+ const cb='mataHatiCMS_'+Date.now();
+ window[cb]=data=>{try{renderCMS(data.items||[])}finally{delete window[cb];script.remove()}};
+ const script=document.createElement('script');
+ script.src=url+(url.includes('?')?'&':'?')+'action=public&callback='+cb;
+ script.onerror=()=>{delete window[cb]};
+ document.head.appendChild(script);
+}
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js'));
-addEventListener('load',()=>setTimeout(()=>document.getElementById('splash').classList.add('hide'),700));
+addEventListener('load',()=>{setTimeout(()=>document.getElementById('splash').classList.add('hide'),700);loadCMS()});
 </script>
 </body></html>
