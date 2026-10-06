@@ -48,7 +48,13 @@ function go(id,el){document.getElementById(id).scrollIntoView({behavior:'smooth'
 function renderCMS(items){
  const grid=document.getElementById('cmsGrid');
  if(!items||!items.length){grid.innerHTML='<article class="card"><div class="icon">📝</div><h3>Belum ada konten publik</h3><p>Konten yang dipublikasikan melalui Admin MATA HATI akan muncul di sini.</p></article>';return}
- grid.innerHTML=items.map(x=>'<article class="card">'+(x.MediaURL?'<img src="'+escCMS(x.MediaURL)+'" alt="" style="width:100%;height:180px;object-fit:cover;border-radius:14px;margin-bottom:10px">':'<div class="icon">✨</div>')+'<div class="eyebrow">'+escCMS(x.Kategori||'MATA HATI')+'</div><h3>'+escCMS(x.Judul||'Tanpa judul')+'</h3><p>'+escCMS(x.Ringkasan||'')+'</p>'+(x.VideoURL?'<p><a href="'+escCMS(x.VideoURL)+'" target="_blank" rel="noopener" style="color:var(--a)">▶ Tonton video</a></p>':'')+'</article>').join('');
+ grid.innerHTML=items.map(x=>{
+ const imageSrc=x.MediaDataURL||x.MediaURL||'';
+ const media=imageSrc
+   ? '<img src="'+escCMS(imageSrc)+'" alt="'+escCMS(x.Judul||'')+'" loading="lazy" style="width:100%;height:180px;object-fit:cover;border-radius:14px;margin-bottom:10px;display:block">'
+   : '<div class="icon">✨</div>';
+ return '<article class="card">'+media+'<div class="eyebrow">'+escCMS(x.Kategori||'MATA HATI')+'</div><h3>'+escCMS(x.Judul||'Tanpa judul')+'</h3><p>'+escCMS(x.Ringkasan||'')+'</p>'+(x.VideoURL?'<p><a href="'+escCMS(x.VideoURL)+'" target="_blank" rel="noopener" style="color:var(--a)">▶ Tonton video</a></p>':'')+'</article>';
+}).join('');
 }
 function escCMS(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function loadCMS(){
