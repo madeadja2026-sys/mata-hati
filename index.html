@@ -209,8 +209,20 @@ document.getElementById('updateNow').onclick=()=>{
   w.postMessage({type:'SKIP_WAITING'});
 };
 
+function hideSplash(){
+  const splash=document.getElementById('splash');
+  if(splash) splash.classList.add('hide');
+}
+
+// Do not make the splash screen depend on the CMS or service worker.
+// This prevents a slow connection from leaving the app stuck on the logo.
+addEventListener('DOMContentLoaded',()=>{
+  setTimeout(hideSplash,450);
+  setTimeout(hideSplash,3500);
+});
+
 if('serviceWorker' in navigator){
-  addEventListener('load',async()=>{
+  addEventListener('DOMContentLoaded',async()=>{
     try{
       swRegistration=await navigator.serviceWorker.register('service-worker.js');
       if(swRegistration.waiting && navigator.serviceWorker.controller) showUpdate(swRegistration);
@@ -420,7 +432,7 @@ function loadCMS(){
 
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
 function setupFeatured(){const x=cmsItems[0];if(!x)return;document.getElementById('featuredTitle').textContent=x.Judul||'MATA HATI';document.getElementById('featuredText').textContent=x.Ringkasan||x.Isi||'Konten pilihan MATA HATI.';const img=imageFor(x);if(img)document.getElementById('featuredImage').src=img;document.getElementById('featuredOpen').onclick=()=>openArticleById(x.ID);document.getElementById('featuredShare').onclick=()=>{currentIndex=visibleItems.findIndex(y=>String(y.ID)===String(x.ID));shareArticle()}}
-addEventListener('load',()=>{loadPersonalData();setTimeout(()=>document.getElementById('splash').classList.add('hide'),650);loadCMS();});
+addEventListener('DOMContentLoaded',()=>{loadPersonalData();loadCMS();});
 </script>
 </body>
 </html>
