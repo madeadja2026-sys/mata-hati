@@ -37,7 +37,7 @@
 <div id="splash"><div class="splash-inner"><img class="splash-icon" src="icon-512.png" alt="MATA HATI"><div class="splash-name">MATA HATI</div><div class="splash-sub">Ruang untuk makna, cerita & kepedulian</div></div></div>
 <div id="offline" class="offline">Mode offline — menampilkan konten tersimpan</div>
 <main class="app">
-<header class="top"><div class="brand"><div class="logo"><img src="icon-192.png" alt=""></div><div><b>MATA HATI</b><span>Portal makna, cerita & kepedulian</span></div></div><button id="installBtn" class="install" hidden>＋ Pasang</button></header>
+<header class="top"><div class="brand"><div class="logo"><img src="icon-192.png" alt=""></div><div><b>MATA HATI</b><span>Portal makna, cerita & kepedulian</span></div></div><div style="display:flex;gap:8px;align-items:center"><button id="dataSaverBtn" class="small-btn" title="Mode hemat data">⚡ Hemat</button><button id="installBtn" class="install" hidden>＋ Pasang</button></div></header>
 
 <section id="home" class="hero">
 <div class="eyebrow">PORTAL KONTEN PWA</div>
@@ -54,6 +54,10 @@
   </div>
   <div class="feature-image"><img id="featuredImage" src="icon-512.png" alt="Artikel pilihan"></div>
 </section>
+<section id="personal" class="section">
+<div class="section-head"><div><h2 id="personalGreeting">👋 Selamat datang kembali</h2><p id="personalSubtitle">Pilihan konten yang disesuaikan dari aktivitas Anda.</p></div></div>
+<div id="personalGrid" class="grid"><div class="empty">Menyusun rekomendasi...</div></div>
+</section>
 
 <section id="slideshow" class="section">
 <div class="section-head"><div><h2>🎞️ Sorotan MATA HATI</h2><p>Slideshow otomatis dari konten bergambar terbaru.</p></div></div>
@@ -62,7 +66,7 @@
 
 <section id="jelajah" class="section">
 <div class="section-head"><div><h2>Jelajah Konten</h2><p id="contentSummary">Memuat konten...</p></div></div>
-<div class="content-tools"><input id="cmsSearch" class="search-box" type="search" placeholder="🔎 Cari judul, cerita, pengetahuan..."></div>
+<div class="content-tools"><input id="cmsSearch" class="search-box" type="search" placeholder="🔎 Cari pintar: judul, topik, penulis..."></div>
 <div id="cmsChips" class="chips"></div>
 <div id="cmsGrid" class="grid"><div class="empty">✨ Memuat konten MATA HATI...</div></div>
 </section>
@@ -75,13 +79,23 @@
 </section>
 
 <section id="trending" class="section">
-<div class="section-head"><div><h2>🔥 Trending</h2><p>Artikel yang paling sering dibuka di perangkat ini.</p></div></div>
+<div class="section-head"><div><h2>🔥 Trending</h2><p id="trendingSubtitle">Popularitas berdasarkan aktivitas bacaan pada perangkat ini.</p></div></div>
+<div class="section-tabs"><button class="media-tab active" data-period="24h">24 Jam</button><button class="media-tab" data-period="7d">7 Hari</button></div>
 <div id="trendingGrid" class="ranking"><div class="empty">Memuat...</div></div>
 </section>
 
 <section id="favorit" class="section">
 <div class="section-head"><div><h2>❤️ Favorit Saya</h2><p>Artikel yang Anda simpan di perangkat ini.</p></div></div>
 <div id="favoriteGrid" class="grid"><div class="empty favorite-empty">Belum ada favorit.</div></div>
+</section>
+<section id="bookmark" class="section">
+<div class="section-head"><div><h2>🔖 Koleksi Bookmark</h2><p>Atur bacaan Anda ke dalam folder pribadi.</p></div><button class="small-btn" id="newFolderBtn">＋ Folder</button></div>
+<div id="bookmarkTabs" class="section-tabs"></div>
+<div id="bookmarkGrid" class="grid"><div class="empty">Belum ada bookmark.</div></div>
+</section>
+<section id="lanjut" class="section">
+<div class="section-head"><div><h2>▶️ Lanjutkan Membaca</h2><p>Riwayat bacaan terakhir Anda.</p></div></div>
+<div id="historyGrid" class="grid"><div class="empty">Belum ada riwayat bacaan.</div></div>
 </section>
 
 <section id="kategori" class="section">
@@ -164,11 +178,26 @@ function goTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',
 function shareSite(){return navigator.share?navigator.share({title:'MATA HATI',text:'Lihat MATA HATI — ruang untuk makna, cerita & kepedulian.',url:location.href}):navigator.clipboard?.writeText(location.href).then(()=>alert('Alamat MATA HATI disalin.'))}
 document.getElementById('shareBtn').onclick=()=>shareSite();
 
-function loadFavorites(){try{favoriteIds=new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY)||'[]').map(String))}catch(e){favoriteIds=new Set()}}
-function loadReads(){try{readCounts=JSON.parse(localStorage.getItem(READS_KEY)||'{}')||{}}catch(e){readCounts={}}}
-function trackRead(id){const k=String(id||'');if(!k)return;readCounts[k]=(readCounts[k]||0)+1;try{localStorage.setItem(READS_KEY,JSON.stringify(readCounts))}catch(e){}}
+function loadPersonalData(){
+ try{favoriteIds=new Set(JSON.parse(localStorage.getItem(FAVORITES_KEY)||'[]').map(String))}catch(e){favoriteIds=new Set()}
+ try{const raw=JSON.parse(localStorage.getItem(BOOKMARKS_KEY)||'{}');bookmarks=raw&&typeof raw==='object'?raw:{};}catch(e){bookmarks={}}
+ try{const s=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');dataSaver=!!s.dataSaver;if(Array.isArray(s.folders)&&s.folders.length)bookmarkFolders=[...new Set([...bookmarkFolders,...s.folders])]}catch(e){}
+ try{readEvents=JSON.parse(localStorage.getItem(READS_KEY)||'[]');if(!Array.isArray(readEvents))readEvents=[]}catch(e){readEvents=[]}
+ try{historyItems=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');if(!Array.isArray(historyItems))historyItems=[]}catch(e){historyItems=[]}
+ pruneReads();pruneHistory();
+}
+function persistPersonal(){try{localStorage.setItem(FAVORITES_KEY,JSON.stringify([...favoriteIds]));localStorage.setItem(BOOKMARKS_KEY,JSON.stringify(bookmarks));localStorage.setItem(READS_KEY,JSON.stringify(readEvents));localStorage.setItem(HISTORY_KEY,JSON.stringify(historyItems));localStorage.setItem(SETTINGS_KEY,JSON.stringify({dataSaver,folders:bookmarkFolders}))}catch(e){}}
+function pruneReads(){const cutoff=Date.now()-7*86400000;readEvents=readEvents.filter(e=>e&&Number(e.ts)>cutoff)}
+function pruneHistory(){historyItems=historyItems.filter(e=>e&&cmsItems.some(x=>String(x.ID)===String(e.id))).slice(0,30)}
 function isFavorite(id){return favoriteIds.has(String(id))}
-function toggleFavorite(id){const key=String(id);if(favoriteIds.has(key))favoriteIds.delete(key);else favoriteIds.add(key);try{localStorage.setItem(FAVORITES_KEY,JSON.stringify([...favoriteIds]))}catch(e){};if(currentIndex>=0)openArticle(currentIndex)}
+function toggleFavorite(id){const key=String(id);if(favoriteIds.has(key))favoriteIds.delete(key);else favoriteIds.add(key);persistPersonal();drawPortalSections();if(currentIndex>=0)openArticle(currentIndex)}
+function isBookmarked(id){return Object.values(bookmarks).some(arr=>Array.isArray(arr)&&arr.map(String).includes(String(id)))}
+function foldersFor(id){return Object.keys(bookmarks).filter(f=>Array.isArray(bookmarks[f])&&bookmarks[f].map(String).includes(String(id)))}
+function saveBookmark(id,folder){const f=String(folder||'Bacaan Nanti');if(!bookmarks[f])bookmarks[f]=[];if(!bookmarks[f].map(String).includes(String(id)))bookmarks[f].push(String(id));persistPersonal();drawPortalSections()}
+function removeBookmark(id,folder){if(!bookmarks[folder])return;bookmarks[folder]=bookmarks[folder].filter(v=>String(v)!==String(id));persistPersonal();drawPortalSections()}
+function chooseBookmarkFolder(id){const existing=foldersFor(id);const label='Pilih folder: '+bookmarkFolders.map((f,i)=>(i+1)+'. '+f).join(' | ')+' | 0. Buat folder baru';const ans=prompt(label,existing[0]||'Bacaan Nanti');if(ans===null)return;let f=ans.trim();if(/^0$/.test(f)){f=prompt('Nama folder baru:','Koleksi Saya')?.trim()||'';if(f&&!bookmarkFolders.includes(f))bookmarkFolders.push(f)}else{const n=Number(f);if(Number.isInteger(n)&&n>0&&n<=bookmarkFolders.length)f=bookmarkFolders[n-1]}if(f){saveBookmark(id,f);currentBookmarkFolder=f}}
+function trackRead(id){const k=String(id||'');if(!k)return;const now=Date.now();readEvents.push({id:k,ts:now});pruneReads();readCounts={};readEvents.forEach(e=>{readCounts[e.id]=(readCounts[e.id]||0)+1});const old=historyItems.findIndex(e=>String(e.id)===k);if(old>=0)historyItems.splice(old,1);historyItems.unshift({id:k,ts:now,progress:historyItems[old]?.progress||0});historyItems=historyItems.slice(0,30);persistPersonal()}
+function updateReadProgress(){const reader=document.querySelector('.reader');const x=visibleItems[currentIndex];if(!reader||!x)return;const max=reader.scrollHeight-reader.clientHeight;const p=max>0?Math.round(reader.scrollTop/max*100):0;const h=historyItems.find(e=>String(e.id)===String(x.ID));if(h){h.progress=Math.max(0,Math.min(100,p));h.ts=Date.now();persistPersonal()}}
 function youtubeId(url){const s=String(url||'');const m=s.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{6,})/);return m?m[1]:''}
 function saveOffline(){try{localStorage.setItem(CACHE_KEY,JSON.stringify(cmsItems))}catch(e){}}
 function loadOffline(){try{const x=JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
@@ -184,6 +213,34 @@ function renderCMS(items,offline=false){
  drawCMS();drawGallery();drawVideos();drawPortalSections();updateStats();
 }
 
+function smartScore(x,q){
+ const tokens=q.toLowerCase().trim().split(/\s+/).filter(Boolean);if(!tokens.length)return 1;
+ const title=String(x.Judul||'').toLowerCase(),cat=String(x.Kategori||'').toLowerCase(),sum=String(x.Ringkasan||'').toLowerCase(),body=String(x.Isi||'').toLowerCase(),author=String(x.Penulis||'').toLowerCase();let score=0;
+ tokens.forEach(t=>{if(title.includes(t))score+=10;if(cat.includes(t))score+=7;if(sum.includes(t))score+=5;if(author.includes(t))score+=4;if(body.includes(t))score+=2});if(title===q.toLowerCase().trim())score+=30;return score
+}
+function smartResults(){const q=cmsQuery.trim();if(!q)return [...cmsItems];return cmsItems.map(x=>({x,score:smartScore(x,q)})).filter(o=>o.score>0).sort((a,b)=>b.score-a.score).map(o=>o.x)}
+function periodTrend(days){const cut=Date.now()-days*86400000,counts={};readEvents.filter(e=>Number(e.ts)>=cut).forEach(e=>counts[e.id]=(counts[e.id]||0)+1);return Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([id,count])=>({id,count}))}
+function renderTrending(days=1){const trend=periodTrend(days),tg=document.getElementById('trendingGrid');const items=trend.map(t=>({x:cmsItems.find(x=>String(x.ID)===String(t.id)),count:t.count})).filter(o=>o.x).slice(0,6);tg.innerHTML=items.length?items.map((o,i)=>'<button class="rank-card" data-trend="'+esc(o.x.ID)+'"><div class="rank-num">#'+(i+1)+' · '+o.count+' dibuka</div><h3>'+esc(o.x.Judul||'Tanpa judul')+'</h3><p>'+esc(o.x.Kategori||'MATA HATI')+'</p></button>').join(''):'<div class="empty">Belum ada aktivitas pada periode ini.</div>';tg.querySelectorAll('[data-trend]').forEach(el=>el.onclick=()=>openArticleById(el.dataset.trend));document.getElementById('trendingSubtitle').textContent=days===1?'Popularitas 24 jam terakhir pada perangkat ini.':'Popularitas 7 hari terakhir pada perangkat ini.'}
+function drawPersonal(){
+ const recent=historyItems.slice(0,1).map(h=>cmsItems.find(x=>String(x.ID)===String(h.id))).filter(Boolean);
+ const favCats={};cmsItems.filter(x=>isFavorite(x.ID)).forEach(x=>{const k=String(x.Kategori||'');favCats[k]=(favCats[k]||0)+1});const topCat=Object.entries(favCats).sort((a,b)=>b[1]-a[1])[0]?.[0];
+ const candidates=cmsItems.filter(x=>!isFavorite(x.ID)).sort((a,b)=>{const ca=topCat&&String(a.Kategori||'')===topCat?10:0,cb=topCat&&String(b.Kategori||'')===topCat?10:0;return cb-ca}).slice(0,3);
+ const items=recent.length?[...recent,...candidates].filter((x,i,a)=>a.findIndex(y=>String(y.ID)===String(x.ID))===i).slice(0,3):candidates;
+ document.getElementById('personalGreeting').textContent=favoriteIds.size?'❤️ Pilihan untuk Anda':'👋 Selamat datang di MATA HATI';
+ document.getElementById('personalSubtitle').textContent=topCat?'Berdasarkan minat Anda pada kategori '+topCat+'.':'Semakin sering Anda membaca, semakin personal rekomendasinya.';
+ const g=document.getElementById('personalGrid');g.innerHTML=items.length?items.map(x=>'<article class="card cms-card" data-personal="'+esc(x.ID)+'">'+(imageFor(x)&&!dataSaver?'<img class="cms-media" src="'+esc(imageFor(x))+'" alt="" loading="lazy">':'<div class="cms-media" style="display:grid;place-items:center;font-size:40px">'+(x.VideoURL?'▶':'✨')+'</div>')+'<div class="cms-body"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h3>'+esc(x.Judul||'Tanpa judul')+'</h3><p>'+esc(x.Ringkasan||'')+'</p><span class="read-more">Buka →</span></div></article>').join(''):'<div class="empty">Belum cukup aktivitas untuk rekomendasi.</div>';g.querySelectorAll('[data-personal]').forEach(el=>el.onclick=()=>openArticleById(el.dataset.personal))
+}
+function drawBookmarks(){
+ const tabs=document.getElementById('bookmarkTabs');tabs.innerHTML=bookmarkFolders.map(f=>'<button class="media-tab '+(f===currentBookmarkFolder?'active':'')+'" data-folder="'+esc(f)+'">'+esc(f)+' <small>('+((bookmarks[f]||[]).length)+')</small></button>').join('');
+ tabs.querySelectorAll('[data-folder]').forEach(b=>b.onclick=()=>{currentBookmarkFolder=b.dataset.folder;drawBookmarks()});
+ const ids=(bookmarks[currentBookmarkFolder]||[]).map(String);const items=ids.map(id=>cmsItems.find(x=>String(x.ID)===id)).filter(Boolean);const g=document.getElementById('bookmarkGrid');
+ g.innerHTML=items.length?items.map(x=>'<article class="card cms-card" data-bookmark="'+esc(x.ID)+'">'+(imageFor(x)&&!dataSaver?'<img class="cms-media" src="'+esc(imageFor(x))+'" alt="" loading="lazy">':'<div class="cms-media" style="display:grid;place-items:center;font-size:40px">🔖</div>')+'<div class="cms-body"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h3>'+esc(x.Judul||'Tanpa judul')+'</h3><p>'+esc(x.Ringkasan||'')+'</p><span class="read-more">Buka →</span></div></article>').join(''):'<div class="empty">Folder ini masih kosong.</div>';g.querySelectorAll('[data-bookmark]').forEach(el=>el.onclick=()=>openArticleById(el.dataset.bookmark))
+}
+function drawHistory(){
+ const g=document.getElementById('historyGrid');const items=historyItems.map(h=>({h,x:cmsItems.find(x=>String(x.ID)===String(h.id))})).filter(o=>o.x).slice(0,6);
+ g.innerHTML=items.length?items.map(o=>'<article class="card cms-card" data-history="'+esc(o.x.ID)+'">'+(imageFor(o.x)&&!dataSaver?'<img class="cms-media" src="'+esc(imageFor(o.x))+'" alt="" loading="lazy">':'<div class="cms-media" style="display:grid;place-items:center;font-size:40px">▶️</div>')+'<div class="cms-body"><div class="eyebrow">'+esc(o.x.Kategori||'MATA HATI')+'</div><h3>'+esc(o.x.Judul||'Tanpa judul')+'</h3><p>'+esc(o.x.Ringkasan||'')+'</p><div class="cms-meta"><span>'+Math.round(o.h.progress||0)+'% dibaca</span><span>'+new Date(o.h.ts).toLocaleDateString('id-ID')+'</span></div><span class="read-more">Lanjutkan →</span></div></article>').join(''):'<div class="empty">Belum ada riwayat bacaan.</div>';g.querySelectorAll('[data-history]').forEach(el=>el.onclick=()=>openArticleById(el.dataset.history))
+}
+function addFolder(){const name=prompt('Nama folder bookmark baru:','Koleksi Saya')?.trim();if(!name)return;if(!bookmarkFolders.includes(name))bookmarkFolders.push(name);currentBookmarkFolder=name;persistPersonal();drawBookmarks()}
 function sortedByDate(items){return [...items].sort((a,b)=>String(b.Tanggal||b.Dibuat||'').localeCompare(String(a.Tanggal||a.Dibuat||'')))}
 function drawPortalSections(){
  const latest=sortedByDate(cmsItems).slice(0,6), lg=document.getElementById('latestGrid');
@@ -198,14 +255,15 @@ function drawPortalSections(){
  const cats=[...new Set(cmsItems.map(x=>String(x.Kategori||'').trim()).filter(Boolean))],ct=document.getElementById('categoryTabs');
  const mediaCats=['Semua','Foto','Video',...cats.filter(x=>x.toLowerCase()!=='foto'&&x.toLowerCase()!=='video')];ct.innerHTML=mediaCats.map(x=>'<button class="media-tab '+(x==='Semua'?'active':'')+'" data-media-cat="'+esc(x)+'">'+(x==='Foto'?'🖼️ ':x==='Video'?'🎬 ':x==='Semua'?'✦ ':'')+esc(x)+'</button>').join('');
  ct.querySelectorAll('[data-media-cat]').forEach(b=>b.onclick=()=>{const v=b.dataset.mediaCat;cmsMode=v==='Foto'?'photo':v==='Video'?'video':'all';cmsCategory=v;document.getElementById('jelajah').scrollIntoView({behavior:'smooth'});document.querySelectorAll('#cmsChips .chip').forEach(x=>x.classList.toggle('active',cmsMode==='all'&&x.dataset.cat===cmsCategory));drawCMS()});
- drawSlideshow();
+ drawSlideshow();drawPersonal();drawBookmarks();drawHistory();renderTrending(1);
 }
 function updateStats(){document.getElementById('statArticles').textContent=cmsItems.length;document.getElementById('statPhotos').textContent=cmsItems.filter(x=>imageFor(x)).length;document.getElementById('statVideos').textContent=cmsItems.filter(x=>x.VideoURL).length}
 function drawSlideshow(){const items=sortedByDate(cmsItems.filter(x=>imageFor(x))).slice(0,7),box=document.getElementById('mediaSlideshow');if(!items.length){box.innerHTML='<div class="empty">Belum ada foto untuk slideshow.</div>';return}box.innerHTML=items.map((x,i)=>'<div class="slide '+(i===0?'active':'')+'"><img src="'+esc(imageFor(x))+'" alt="'+esc(x.Judul||'')+'"><div class="slide-caption"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h3>'+esc(x.Judul||'Foto MATA HATI')+'</h3><p>'+esc(x.Ringkasan||'')+'</p></div></div>').join('')+'<div class="slide-dots">'+items.map((_,i)=>'<button class="slide-dot '+(i===0?'active':'')+'" data-slide="'+i+'"></button>').join('')+'</div>';box.querySelectorAll('[data-slide]').forEach(b=>b.onclick=e=>{e.stopPropagation();showSlide(Number(b.dataset.slide))});box.querySelectorAll('.slide').forEach((s,i)=>s.onclick=()=>openArticleById(items[i].ID));clearInterval(slideTimer);slideTimer=setInterval(()=>showSlide((slideIndex+1)%items.length),5000);slideIndex=0}
 function showSlide(i){const slides=document.querySelectorAll('#mediaSlideshow .slide'),dots=document.querySelectorAll('#mediaSlideshow .slide-dot');if(!slides.length)return;slideIndex=(i+slides.length)%slides.length;slides.forEach((s,n)=>s.classList.toggle('active',n===slideIndex));dots.forEach((d,n)=>d.classList.toggle('active',n===slideIndex))}
 function drawCMS(){
  const q=cmsQuery.toLowerCase().trim();
- visibleItems=cmsItems.filter(x=>{const cat=cmsMode==='all'&&(cmsCategory==='Semua'||String(x.Kategori||'').trim()===cmsCategory)||cmsMode==='photo'&&!!imageFor(x)||cmsMode==='video'&&!!x.VideoURL;const hay=[x.Judul,x.Ringkasan,x.Isi,x.Kategori,x.Penulis].map(v=>String(v||'').toLowerCase()).join(' ');return cat&&(!q||hay.includes(q))});
+const source=smartResults();
+visibleItems=source.filter(x=>cmsMode==='all'?(cmsCategory==='Semua'||String(x.Kategori||'').trim()===cmsCategory):cmsMode==='photo'?!!imageFor(x):!!x.VideoURL);
  const grid=document.getElementById('cmsGrid');
  if(!visibleItems.length){grid.innerHTML='<div class="empty">🔎 Tidak ada konten yang cocok.</div>';return}
  grid.innerHTML=visibleItems.map((x,i)=>{const img=imageFor(x);const media=img?'<img class="cms-media" src="'+esc(img)+'" alt="'+esc(x.Judul||'')+'" loading="lazy">':'<div class="cms-media" style="display:grid;place-items:center;font-size:42px">✨</div>';return '<article class="card cms-card" data-i="'+i+'">'+media+'<div class="cms-body"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h3>'+esc(x.Judul||'Tanpa judul')+'</h3><p>'+esc(x.Ringkasan||'')+'</p><div class="cms-meta"><span>'+esc(x.Penulis||'MATA HATI')+'</span><span>'+esc(dateFor(x))+'</span></div><span class="read-more">Baca selengkapnya →</span></div></article>'}).join('');
@@ -242,14 +300,14 @@ function openArticleById(id){const i=visibleItems.findIndex(x=>String(x.ID)===St
 function openArticle(i){
  if(!visibleItems[i])return;
  currentIndex=i;
- const x=visibleItems[i]; trackRead(x.ID); drawPortalSections();,img=imageFor(x),video=String(x.VideoURL||''),embed=videoEmbed(video);
+ const x=visibleItems[i];trackRead(x.ID);drawPortalSections();const img=dataSaver?'':imageFor(x),video=String(x.VideoURL||''),embed=dataSaver?'':videoEmbed(video);
  const body=document.getElementById('readerBody');
  body.innerHTML=(img?'<img class="reader-cover" src="'+esc(img)+'" alt="'+esc(x.Judul||'')+'">':'')+
  '<div class="reader-content"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h2>'+esc(x.Judul||'Tanpa judul')+'</h2>'+
  '<div class="reader-meta"><span>✍ '+esc(x.Penulis||'MATA HATI')+'</span><span>📅 '+esc(dateFor(x))+'</span></div>'+
  '<p class="reader-lead">'+esc(x.Ringkasan||'')+'</p><div class="article-body">'+esc(x.Isi||x.Ringkasan||'')+'</div>'+
  (embed?'<iframe class="reader-video" src="'+esc(embed)+'" title="'+esc(x.Judul||'Video')+'" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share" allowfullscreen></iframe>':(video?'<p style="margin-top:20px"><a href="'+esc(video)+'" target="_blank" rel="noopener" style="color:var(--a);font-weight:800">▶ Buka video</a></p>':''))+
- '<div class="reader-actions"><button onclick="shareArticle()">↗ Bagikan</button><button class="favorite-btn '+(isFavorite(x.ID)?'active':'')+'" onclick="toggleFavorite(\''+esc(String(x.ID||''))+'\')">'+(isFavorite(x.ID)?'♥ Tersimpan':'♡ Simpan')</button><button onclick="closeArticle()">Tutup</button></div>'+
+ '<div class="reader-actions"><button onclick="shareArticle()">↗ Bagikan</button><button onclick="chooseBookmarkFolder(\''+esc(String(x.ID||''))+'\')">🔖 Folder</button><button class="favorite-btn '+(isFavorite(x.ID)?'active':'')+'" onclick="toggleFavorite(\''+esc(String(x.ID||''))+'\')">'+(isFavorite(x.ID)?'♥ Tersimpan':'♡ Simpan')</button><button onclick="closeArticle()">Tutup</button></div>'+
  '<div class="reader-nav"><button id="prevBtn" '+(i<=0?'disabled':'')+'>← Sebelumnya</button><button id="nextBtn" '+(i>=visibleItems.length-1?'disabled':'')+'>Berikutnya →</button></div>'+
  relatedHTML(x)+'</div>';
  document.getElementById('prevBtn').onclick=()=>openArticle(currentIndex-1);
@@ -257,7 +315,7 @@ function openArticle(i){
  body.querySelectorAll('.related-item').forEach(b=>b.onclick=()=>openArticleById(b.dataset.id));
  document.getElementById('readerPosition').textContent=(i+1)+' / '+visibleItems.length;
  const modal=document.getElementById('articleModal');modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
- try{history.replaceState(null,'','#artikel='+encodeURIComponent(x.ID||''))}catch(e){}
+ const saved=historyItems.find(h=>String(h.id)===String(x.ID));setTimeout(()=>{const r=document.querySelector('.reader');if(r&&saved&&saved.progress>3){const max=r.scrollHeight-r.clientHeight;r.scrollTop=max*(saved.progress/100)}},30);try{history.replaceState(null,'','#artikel='+encodeURIComponent(x.ID||''))}catch(e){}
 }
 
 function openLightbox(i){if(!galleryItems[i])return;galleryIndex=i;const x=galleryItems[i];document.getElementById('lightboxImage').src=imageFor(x);document.getElementById('lightboxImage').alt=x.Judul||'';document.getElementById('lightboxCaption').textContent=x.Judul||'MATA HATI';document.getElementById('lightbox').classList.add('show');document.body.style.overflow='hidden'}
@@ -267,6 +325,10 @@ function closeArticle(){const m=document.getElementById('articleModal');m.classL
 async function shareArticle(){const x=visibleItems[currentIndex]||{};const url=location.href;try{if(navigator.share)await navigator.share({title:x.Judul||'MATA HATI',text:x.Ringkasan||'',url});else{await navigator.clipboard.writeText(url);alert('Tautan artikel disalin.')}}catch(e){}}
 
 document.getElementById('cmsSearch').oninput=e=>{cmsQuery=e.target.value;drawCMS()};
+document.querySelectorAll('[data-period]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-period]').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderTrending(b.dataset.period==='7d'?7:1)});
+document.getElementById('newFolderBtn').onclick=addFolder;
+document.getElementById('dataSaverBtn').onclick=()=>{dataSaver=!dataSaver;document.getElementById('dataSaverBtn').classList.toggle('favorite-btn',dataSaver);document.getElementById('dataSaverBtn').textContent=dataSaver?'⚡ Hemat: ON':'⚡ Hemat';persistPersonal();drawPortalSections();drawCMS();drawGallery();drawVideos()};
+const readerEl=document.querySelector('.reader');if(readerEl)readerEl.addEventListener('scroll',updateReadProgress,{passive:true});
 document.getElementById('modalClose').onclick=closeArticle;
 document.getElementById('lightboxClose').onclick=closeLightbox;document.getElementById('lightbox').onclick=e=>{if(e.target.id==='lightbox')closeLightbox()};document.getElementById('lightboxPrev').onclick=e=>{e.stopPropagation();moveLightbox(-1)};document.getElementById('lightboxNext').onclick=e=>{e.stopPropagation();moveLightbox(1)};
 window.addEventListener('scroll',()=>document.getElementById('backTop').classList.toggle('show',scrollY>500),{passive:true});document.getElementById('backTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});
@@ -291,7 +353,7 @@ function loadCMS(){
 
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
 function setupFeatured(){const x=cmsItems[0];if(!x)return;document.getElementById('featuredTitle').textContent=x.Judul||'MATA HATI';document.getElementById('featuredText').textContent=x.Ringkasan||x.Isi||'Konten pilihan MATA HATI.';const img=imageFor(x);if(img)document.getElementById('featuredImage').src=img;document.getElementById('featuredOpen').onclick=()=>openArticleById(x.ID);document.getElementById('featuredShare').onclick=()=>{currentIndex=visibleItems.findIndex(y=>String(y.ID)===String(x.ID));shareArticle()}}
-addEventListener('load',()=>{loadFavorites();loadReads();setTimeout(()=>document.getElementById('splash').classList.add('hide'),650);loadCMS();});
+addEventListener('load',()=>{loadPersonalData();setTimeout(()=>document.getElementById('splash').classList.add('hide'),650);loadCMS();});
 </script>
 </body>
 </html>
