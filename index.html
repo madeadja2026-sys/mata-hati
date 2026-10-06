@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#071a2b">
-<meta name="description" content="MATA HATI — ruang untuk makna, cerita dan kepedulian.">
+<meta name="description" content="MATA HATI — portal untuk makna, cerita, pengetahuan, kepedulian, dan inspirasi.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,107 +12,202 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>MATA HATI</title>
+<title>MATA HATI — Portal Konten</title>
 <style>
-:root{--a:#38d9b6;--gold:#ffd166;--t:#f5fbff;--m:#a9c0d1}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(145deg,#071a2b,#0a2238 55%,#102d43);color:var(--t);min-height:100vh}
-#splash{position:fixed;inset:0;z-index:100;background:#071a2b;display:grid;place-items:center;transition:opacity .45s ease,visibility .45s}.splash-inner{text-align:center}.splash-icon{width:112px;height:112px;border-radius:28px;box-shadow:0 20px 60px #0008;animation:pulse 1.5s ease-in-out infinite}.splash-name{font-size:22px;font-weight:800;letter-spacing:.18em;margin-top:18px}.splash-sub{color:#a9c0d1;font-size:12px;margin-top:6px}@keyframes pulse{50%{transform:scale(1.04)}}#splash.hide{opacity:0;visibility:hidden}
-.app{max-width:1180px;margin:auto;padding:18px 18px calc(100px + env(safe-area-inset-bottom))}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0 24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:16px;overflow:hidden}.logo img{width:100%;height:100%}.brand b{font-size:20px;letter-spacing:.12em}.brand span{display:block;color:var(--m);font-size:11px;margin-top:2px}button{font:inherit}.install,.ghost{border:1px solid #ffffff2b;background:#ffffff12;color:white;border-radius:13px;padding:10px 14px;cursor:pointer}.hero{overflow:hidden;border:1px solid #ffffff14;border-radius:30px;padding:34px 28px;background:radial-gradient(circle at 90% 10%,#38d9b633,transparent 32%),linear-gradient(135deg,#123c57,#092338);box-shadow:0 25px 70px #0004}.eyebrow{color:var(--a);font-weight:700;font-size:13px;letter-spacing:.16em}.hero h1{font-size:clamp(38px,7vw,72px);line-height:.95;margin:12px 0}.hero p{max-width:650px;color:#c9dbe7;font-size:17px;line-height:1.7}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.primary{padding:12px 17px;border-radius:14px;border:0;cursor:pointer;background:var(--a);color:#062238;font-weight:800}.section{margin-top:30px}.section h2{margin:0 0 14px;font-size:22px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#ffffff08;border:1px solid #ffffff12;border-radius:22px;padding:20px;min-height:150px}.icon{font-size:28px}.card h3{margin:12px 0 6px}.card p{margin:0;color:var(--m);line-height:1.6}.quote{margin-top:30px;padding:25px;border-left:3px solid var(--gold);background:#ffffff07;border-radius:0 20px 20px 0;color:#dbe9f2;font-size:20px;line-height:1.6}.bottom{position:fixed;left:50%;bottom:max(8px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(680px,calc(100% - 24px));background:#071a2be8;backdrop-filter:blur(18px);border:1px solid #ffffff16;border-radius:20px;padding:9px;display:flex;justify-content:space-around;z-index:5}.nav{border:0;background:none;color:#9eb7c9;padding:7px 14px;cursor:pointer;border-radius:13px}.nav.active{background:#38d9b61a;color:var(--a)}.content-tools{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}.search-box{flex:1;min-width:220px;padding:12px 15px;border-radius:14px;border:1px solid #ffffff18;background:#ffffff0b;color:#fff;outline:none}.search-box::placeholder{color:#8ea8ba}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:3px;scrollbar-width:none}.chip{white-space:nowrap;border:1px solid #ffffff18;background:#ffffff08;color:#b8cedc;border-radius:999px;padding:9px 13px;cursor:pointer}.chip.active,.chip:hover{background:#38d9b61a;color:var(--a);border-color:#38d9b655}.cms-card{padding:0;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.cms-card:hover{transform:translateY(-3px);border-color:#38d9b655;box-shadow:0 18px 45px #0004}.cms-media{width:100%;height:190px;object-fit:cover;background:#0d2a40}.cms-body{padding:18px 20px 20px}.cms-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#8faabd;font-size:11px;margin-top:10px}.read-more{display:inline-block;margin-top:14px;color:var(--a);font-weight:700;font-size:13px}.empty-search{grid-column:1/-1;text-align:center;padding:30px;color:var(--m)}.modal{position:fixed;inset:0;z-index:50;background:#020b14cc;backdrop-filter:blur(12px);display:none;padding:20px;overflow:auto}.modal.show{display:grid;place-items:center}.modal-box{width:min(820px,100%);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#0c2940,#071a2b);border:1px solid #ffffff18;border-radius:26px;box-shadow:0 30px 100px #0008}.modal-close{position:sticky;top:12px;float:right;margin:12px;width:42px;height:42px;border:1px solid #ffffff20;background:#071a2bcc;color:#fff;border-radius:50%;cursor:pointer;font-size:22px;z-index:2}.modal-cover{width:100%;max-height:420px;object-fit:cover}.modal-content{padding:24px}.modal-content h2{font-size:clamp(26px,5vw,42px);margin:8px 0 14px}.modal-content .article-body{color:#c9dbe7;line-height:1.85;white-space:pre-wrap}.modal-video{width:100%;aspect-ratio:16/9;border:0;border-radius:16px;margin-top:20px}.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.modal-actions button{border:1px solid #ffffff20;background:#ffffff0b;color:#fff;border-radius:12px;padding:10px 14px;cursor:pointer}@media(max-width:760px){.cms-media{height:175px}.modal{padding:10px}.modal-box{max-height:94vh}.modal-content{padding:18px}}
-@media(max-width:760px){.app{padding:12px 12px 90px}.brand b{font-size:17px}.hero{padding:28px 20px;border-radius:24px}.hero p{font-size:15px}.grid{grid-template-columns:1fr}.card{min-height:auto}.bottom{bottom:8px}.nav{font-size:12px;padding:7px 10px}}
+:root{--bg:#061522;--panel:#0b2538;--panel2:#102f45;--a:#38d9b6;--gold:#ffd166;--text:#f5fbff;--muted:#a9c0d1;--line:#ffffff16;--danger:#ff7b7b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 10% 0%,#123b54 0,#061522 36%,#071a2b 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}button,input{font:inherit}button{cursor:pointer}
+#splash{position:fixed;inset:0;z-index:100;background:#061522;display:grid;place-items:center;transition:.45s}.splash-inner{text-align:center}.splash-icon{width:110px;height:110px;border-radius:28px;box-shadow:0 25px 80px #0009;animation:pulse 1.5s infinite}.splash-name{font-weight:900;letter-spacing:.2em;margin-top:16px}.splash-sub{color:var(--muted);font-size:12px;margin-top:6px}@keyframes pulse{50%{transform:scale(1.04)}}#splash.hide{opacity:0;visibility:hidden}
+.app{width:min(1180px,100%);margin:auto;padding:14px 18px calc(100px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0 18px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;overflow:hidden}.logo img{width:100%;height:100%;display:block}.brand b{font-size:19px;letter-spacing:.13em}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.install,.ghost,.small-btn{border:1px solid var(--line);background:#ffffff0d;color:#fff;border-radius:13px;padding:10px 14px}.install:hover,.ghost:hover,.small-btn:hover{border-color:#38d9b655;background:#38d9b615}
+.hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:30px;padding:42px 30px;background:radial-gradient(circle at 90% 10%,#38d9b633,transparent 30%),linear-gradient(135deg,#123d58,#082438);box-shadow:0 30px 90px #0005}.hero:after{content:"";position:absolute;width:240px;height:240px;border-radius:50%;right:-100px;bottom:-130px;background:#ffd16612;filter:blur(4px)}.eyebrow{color:var(--a);font-size:12px;font-weight:800;letter-spacing:.17em;text-transform:uppercase}.hero h1{font-size:clamp(40px,7vw,76px);line-height:.94;margin:12px 0}.hero p{max-width:700px;color:#c9dbe7;font-size:17px;line-height:1.75}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.primary{border:0;background:var(--a);color:#062238;font-weight:900;border-radius:14px;padding:12px 18px}.primary:hover{filter:brightness(1.05)}
+.section{margin-top:34px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}.section h2{font-size:24px;margin:0}.section-head p{margin:0;color:var(--muted);font-size:13px}.content-tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.search-box{width:100%;padding:13px 16px;border:1px solid var(--line);border-radius:15px;background:#ffffff0b;color:#fff;outline:none}.search-box:focus{border-color:#38d9b655;box-shadow:0 0 0 3px #38d9b610}.search-box::placeholder{color:#7f9aac}.chips{display:flex;gap:8px;overflow:auto;padding:2px 0 7px;scrollbar-width:none}.chip{white-space:nowrap;border:1px solid var(--line);background:#ffffff08;color:#b8cedc;border-radius:999px;padding:8px 13px}.chip.active,.chip:hover{color:var(--a);border-color:#38d9b655;background:#38d9b615}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{background:#ffffff08;border:1px solid var(--line);border-radius:22px;overflow:hidden;transition:.2s}.card:hover{transform:translateY(-3px);border-color:#38d9b655;box-shadow:0 20px 55px #0005}.cms-card{cursor:pointer}.cms-media{width:100%;height:205px;object-fit:cover;display:block;background:#0d2a40}.cms-body{padding:17px 19px 19px}.cms-body h3{font-size:19px;margin:9px 0 7px}.cms-body p{margin:0;color:var(--muted);line-height:1.6}.cms-meta{display:flex;justify-content:space-between;gap:8px;margin-top:12px;color:#89a6b8;font-size:11px}.read-more{display:inline-block;color:var(--a);font-weight:800;font-size:13px;margin-top:14px}.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 20px;border:1px dashed #ffffff20;border-radius:18px}
+.feature-grid{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:15px}.feature{min-height:190px;padding:22px;background:linear-gradient(145deg,#0f334a,#0a2235);border:1px solid var(--line);border-radius:22px}.feature strong{display:block;font-size:18px;margin:10px 0}.feature p{color:var(--muted);line-height:1.6;margin:0}.feature .icon{font-size:30px}
+.quote{margin-top:34px;padding:28px;border-left:3px solid var(--gold);background:#ffffff07;border-radius:0 22px 22px 0;color:#dbe9f2;font-size:20px;line-height:1.65}
+.modal{position:fixed;inset:0;z-index:50;background:#020b14dd;backdrop-filter:blur(14px);display:none;padding:12px;overflow:auto}.modal.show{display:grid;place-items:center}.reader{width:min(900px,100%);max-height:94vh;overflow:auto;background:linear-gradient(145deg,#0c2a40,#061a2b);border:1px solid #ffffff18;border-radius:27px;box-shadow:0 35px 110px #0009}.reader-top{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#071a2be8;backdrop-filter:blur(15px);border-bottom:1px solid #ffffff10}.reader-top span{color:var(--muted);font-size:12px}.close{width:42px;height:42px;border:1px solid #ffffff20;background:#071a2bcc;color:#fff;border-radius:50%;font-size:23px}.reader-cover{width:100%;max-height:470px;object-fit:cover;display:block}.reader-content{padding:26px clamp(18px,4vw,42px) 32px}.reader-content h2{font-size:clamp(30px,6vw,52px);line-height:1.05;margin:9px 0 14px}.reader-lead{font-size:18px;color:#d4e4ec;line-height:1.7}.article-body{color:#c9dbe7;line-height:1.9;font-size:16px;white-space:pre-wrap}.reader-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#89a6b8;font-size:12px;margin:12px 0 22px}.reader-video{width:100%;aspect-ratio:16/9;border:0;border-radius:16px;margin-top:22px;background:#000}.reader-actions,.reader-nav{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.reader-actions button,.reader-nav button{border:1px solid #ffffff20;background:#ffffff0b;color:#fff;border-radius:12px;padding:10px 13px}.reader-nav{justify-content:space-between}.reader-nav button:disabled{opacity:.35;cursor:not-allowed}.related{margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}.related-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.related-item{border:1px solid var(--line);background:#ffffff07;border-radius:15px;padding:13px;color:#fff;text-align:left}.related-item small{display:block;color:var(--a);margin-bottom:4px}.related-item span{color:#c9dbe7}
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.gallery-item{position:relative;overflow:hidden;border-radius:17px;border:1px solid var(--line);background:#0d2a40;min-height:150px;cursor:pointer}.gallery-item img{width:100%;height:100%;min-height:150px;object-fit:cover;display:block;transition:.25s}.gallery-item:hover img{transform:scale(1.04)}.gallery-caption{position:absolute;left:0;right:0;bottom:0;padding:26px 10px 10px;background:linear-gradient(transparent,#000b);font-size:12px}
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.video-card{border:1px solid var(--line);background:#ffffff08;border-radius:20px;padding:14px}.video-thumb{aspect-ratio:16/9;border-radius:14px;background:linear-gradient(135deg,#123c57,#071a2b);display:grid;place-items:center;font-size:42px;margin-bottom:12px}.video-card h3{margin:5px 0}.video-card p{color:var(--muted);font-size:13px;line-height:1.5;margin:0}
+.bottom{position:fixed;left:50%;bottom:max(8px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(760px,calc(100% - 20px));z-index:20;display:flex;justify-content:space-around;padding:8px;background:#071a2be8;backdrop-filter:blur(18px);border:1px solid #ffffff18;border-radius:22px;box-shadow:0 15px 50px #0007}.nav{border:0;background:none;color:#91aabc;border-radius:14px;padding:7px 13px;min-width:78px;font-size:12px}.nav b{display:block;font-size:18px;font-weight:500}.nav.active{color:var(--a);background:#38d9b615}
+.offline{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:60;background:#ffd166;color:#132333;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:800;box-shadow:0 8px 30px #0005;display:none}.offline.show{display:block}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.feature-grid{grid-template-columns:1fr 1fr}.video-grid{grid-template-columns:repeat(2,1fr)}.gallery-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){.app{padding:10px 12px calc(95px + env(safe-area-inset-bottom))}.top{padding-bottom:14px}.brand b{font-size:16px}.brand span{font-size:10px}.logo{width:42px;height:42px}.hero{padding:30px 20px;border-radius:24px}.hero h1{font-size:44px}.hero p{font-size:15px}.grid,.feature-grid,.video-grid{grid-template-columns:1fr}.gallery-grid{grid-template-columns:repeat(2,1fr)}.cms-media{height:190px}.reader{border-radius:20px}.reader-content{padding:22px 17px 28px}.reader-cover{max-height:360px}.related-grid{grid-template-columns:1fr}.bottom{width:calc(100% - 14px)}.nav{min-width:60px;padding:7px 6px}}
 </style>
 </head>
 <body>
 <div id="splash"><div class="splash-inner"><img class="splash-icon" src="icon-512.png" alt="MATA HATI"><div class="splash-name">MATA HATI</div><div class="splash-sub">Ruang untuk makna, cerita & kepedulian</div></div></div>
+<div id="offline" class="offline">Mode offline — menampilkan konten tersimpan</div>
 <main class="app">
-<header class="top"><div class="brand"><div class="logo"><img src="icon-192.png" alt=""></div><div><b>MATA HATI</b><span>Ruang untuk makna, cerita & kepedulian</span></div></div><button id="installBtn" class="install" hidden>＋ Pasang Aplikasi</button></header>
-<section id="home" class="hero"><div class="eyebrow">SELAMAT DATANG</div><h1>Lihat dengan hati.<br>Rasakan makna.</h1><p>MATA HATI adalah ruang digital untuk berbagi inspirasi, cerita, pengetahuan, kepedulian, dan gagasan yang memberi arti bagi kehidupan.</p><div class="actions"><button class="primary" onclick="document.getElementById('jelajah').scrollIntoView()">Jelajahi MATA HATI</button><button class="ghost" id="shareBtn">Bagikan</button></div></section>
-<section id="konten" class="section"><h2>Konten Terbaru</h2><div class="content-tools"><input id="cmsSearch" class="search-box" type="search" placeholder="Cari judul atau isi konten..."></div><div id="cmsChips" class="chips" aria-label="Filter kategori"></div><div id="cmsGrid" class="grid"><article class="card"><div class="icon">✨</div><h3>Memuat konten...</h3><p>Konten MATA HATI akan tampil di sini setelah CMS terhubung.</p></article></div></section>
-<section id="jelajah" class="section"><h2>Jelajahi</h2><div class="grid">
-<article class="card"><div class="icon">✨</div><h3>Inspirasi</h3><p>Kumpulan gagasan dan kisah yang mendorong kita untuk terus bertumbuh.</p></article>
-<article class="card"><div class="icon">📖</div><h3>Cerita</h3><p>Ruang untuk pengalaman, refleksi, dan cerita manusia yang dekat dengan kehidupan.</p></article>
-<article class="card"><div class="icon">🤝</div><h3>Kepedulian</h3><p>Menumbuhkan empati, kebersamaan, dan tindakan kecil yang berarti.</p></article>
-<article class="card"><div class="icon">💡</div><h3>Pengetahuan</h3><p>Informasi praktis yang dikemas sederhana, modern, dan mudah dipahami.</p></article>
-<article class="card"><div class="icon">🌱</div><h3>Ruang Tumbuh</h3><p>Tempat menemukan perspektif baru dan membangun kebiasaan yang lebih baik.</p></article>
-<article class="card"><div class="icon">❤️</div><h3>Suara Hati</h3><p>Tempat menyampaikan pesan positif yang menghargai sesama dan kehidupan.</p></article>
-</div></section>
+<header class="top"><div class="brand"><div class="logo"><img src="icon-192.png" alt=""></div><div><b>MATA HATI</b><span>Portal makna, cerita & kepedulian</span></div></div><button id="installBtn" class="install" hidden>＋ Pasang</button></header>
+
+<section id="home" class="hero">
+<div class="eyebrow">PORTAL KONTEN PWA</div>
+<h1>Lihat dengan hati.<br>Rasakan makna.</h1>
+<p>MATA HATI adalah ruang digital untuk inspirasi, cerita, pengetahuan, kepedulian, dan gagasan yang memberi arti bagi kehidupan.</p>
+<div class="actions"><button class="primary" onclick="goTo('jelajah')">Jelajahi MATA HATI</button><button class="ghost" id="shareBtn">↗ Bagikan</button></div>
+</section>
+
+<section id="jelajah" class="section">
+<div class="section-head"><div><h2>Jelajah Konten</h2><p id="contentSummary">Memuat konten...</p></div></div>
+<div class="content-tools"><input id="cmsSearch" class="search-box" type="search" placeholder="🔎 Cari judul, cerita, pengetahuan..."></div>
+<div id="cmsChips" class="chips"></div>
+<div id="cmsGrid" class="grid"><div class="empty">✨ Memuat konten MATA HATI...</div></div>
+</section>
+
+<section id="galeri" class="section">
+<div class="section-head"><div><h2>🖼️ Galeri Foto</h2><p>Foto dari konten publik MATA HATI</p></div></div>
+<div id="galleryGrid" class="gallery-grid"><div class="empty">Memuat galeri...</div></div>
+</section>
+
+<section id="video" class="section">
+<div class="section-head"><div><h2>🎬 Galeri Video</h2><p>Video edukasi dan cerita pilihan</p></div></div>
+<div id="videoGrid" class="video-grid"><div class="empty">Memuat video...</div></div>
+</section>
+
+<section class="section">
+<div class="feature-grid">
+<div class="feature"><div class="icon">✨</div><strong>Inspirasi</strong><p>Gagasan dan kisah yang mendorong kita untuk terus bertumbuh.</p></div>
+<div class="feature"><div class="icon">📖</div><strong>Cerita</strong><p>Pengalaman, refleksi, dan cerita manusia yang dekat dengan kehidupan.</p></div>
+<div class="feature"><div class="icon">🤝</div><strong>Kepedulian</strong><p>Empati, kebersamaan, dan tindakan kecil yang berarti.</p></div>
+</div>
+</section>
+
 <section class="quote">“Tidak semua hal harus dilihat dengan mata. Ada hal-hal yang baru benar-benar terlihat ketika kita menggunakan hati.”</section>
-<section id="tentang" class="section"><h2>Tentang MATA HATI</h2><div class="card"><p>MATA HATI dirancang sebagai platform yang dapat berkembang menjadi portal informasi, komunitas, edukasi, publikasi, maupun aplikasi layanan digital.</p></div></section>
+
+<section id="tentang" class="section"><div class="section-head"><div><h2>Tentang MATA HATI</h2><p>Portal konten yang tumbuh bersama pembacanya.</p></div></div><div class="card" style="padding:22px"><p style="color:var(--muted);line-height:1.8;margin:0">MATA HATI dirancang sebagai ruang digital untuk berbagi makna, cerita, pengetahuan, kepedulian, dan inspirasi. Konten dikelola melalui CMS dan dipublikasikan otomatis ke PWA.</p></div></section>
 </main>
-<div id="articleModal" class="modal" aria-hidden="true"><div class="modal-box"><button class="modal-close" id="modalClose" aria-label="Tutup">×</button><div id="modalBody"></div></div></div>
-<nav class="bottom"><button class="nav active" onclick="go('home',this)">⌂<br>Beranda</button><button class="nav" onclick="go('konten',this)">✦<br>Jelajah</button><button class="nav" onclick="go('tentang',this)">♡<br>Tentang</button></nav>
+
+<div id="articleModal" class="modal" aria-hidden="true">
+<div class="reader">
+<div class="reader-top"><span id="readerPosition">Artikel</span><button class="close" id="modalClose" aria-label="Tutup">×</button></div>
+<div id="readerBody"></div>
+</div>
+</div>
+
+<nav class="bottom">
+<button class="nav active" data-target="home" onclick="goTo('home')"><b>⌂</b>Beranda</button>
+<button class="nav" data-target="jelajah" onclick="goTo('jelajah')"><b>✦</b>Jelajah</button>
+<button class="nav" data-target="galeri" onclick="goTo('galeri')"><b>▦</b>Galeri</button>
+<button class="nav" data-target="tentang" onclick="goTo('tentang')"><b>♡</b>Tentang</button>
+</nav>
+
 <script src="cms-config.js"></script>
 <script>
-let deferredPrompt;const b=document.getElementById('installBtn');
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;b.hidden=false});
-b.onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;b.hidden=true};
-document.getElementById('shareBtn').onclick=async()=>{try{await navigator.share({title:'MATA HATI',text:'Lihat MATA HATI — ruang untuk makna, cerita & kepedulian.',url:location.href})}catch(e){try{await navigator.clipboard.writeText(location.href);alert('Alamat MATA HATI disalin.')}catch(_){}}};
-function go(id,el){document.getElementById(id).scrollIntoView({behavior:'smooth'});document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
-let cmsItems=[];let cmsCategory='Semua';let cmsQuery='';
+let deferredPrompt=null;
+let cmsItems=[];
+let visibleItems=[];
+let cmsCategory='Semua';
+let cmsQuery='';
+let currentIndex=-1;
+const CACHE_KEY='MATA_HATI_CONTENT_V8';
 
-function renderCMS(items){
+const installBtn=document.getElementById('installBtn');
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});
+installBtn.onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true};
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function driveImageURL(url){const s=String(url||'').trim();if(!s)return '';const m=s.match(/[?&]id=([A-Za-z0-9_-]+)/)||s.match(/\/d\/([A-Za-z0-9_-]+)/);return m?'https://lh3.googleusercontent.com/d/'+encodeURIComponent(m[1]):''}
+function imageFor(x){return x.MediaDataURL||driveImageURL(x.MediaURL)||''}
+function dateFor(x){return x&&x.Tanggal?String(x.Tanggal).slice(0,10):''}
+function videoEmbed(url){const s=String(url||'').trim();if(!s)return '';if(s.includes('youtube.com/watch'))return 'https://www.youtube.com/embed/'+(s.split('v=')[1]||'').split('&')[0];if(s.includes('youtu.be/'))return 'https://www.youtube.com/embed/'+s.split('youtu.be/')[1].split('?')[0];return ''}
+
+function goTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.target===id))}
+function shareSite(){return navigator.share?navigator.share({title:'MATA HATI',text:'Lihat MATA HATI — ruang untuk makna, cerita & kepedulian.',url:location.href}):navigator.clipboard?.writeText(location.href).then(()=>alert('Alamat MATA HATI disalin.'))}
+document.getElementById('shareBtn').onclick=()=>shareSite();
+
+function saveOffline(){try{localStorage.setItem(CACHE_KEY,JSON.stringify(cmsItems))}catch(e){}}
+function loadOffline(){try{const x=JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+
+function renderCMS(items,offline=false){
  cmsItems=Array.isArray(items)?items:[];
+ saveOffline();
  const cats=['Semua',...new Set(cmsItems.map(x=>String(x.Kategori||'').trim()).filter(Boolean))];
  const chips=document.getElementById('cmsChips');
- chips.innerHTML=cats.map(cat=>'<button class="chip '+(cat==='Semua'?'active':'')+'" data-cat="'+escCMS(cat)+'">'+escCMS(cat)+'</button>').join('');
- chips.querySelectorAll('.chip').forEach(btn=>btn.addEventListener('click',()=>{cmsCategory=btn.dataset.cat;chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));btn.classList.add('active');drawCMS()}));
- drawCMS();
+ chips.innerHTML=cats.map(c=>'<button class="chip '+(c==='Semua'?'active':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');
+ chips.querySelectorAll('.chip').forEach(btn=>btn.onclick=()=>{cmsCategory=btn.dataset.cat;chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));btn.classList.add('active');drawCMS()});
+ document.getElementById('contentSummary').textContent=cmsItems.length+' konten publik'+(offline?' · tersimpan offline':'');
+ drawCMS();drawGallery();drawVideos();
 }
 
 function drawCMS(){
- const grid=document.getElementById('cmsGrid');
  const q=cmsQuery.toLowerCase().trim();
- const filtered=cmsItems.filter(x=>{
-   const category=cmsCategory==='Semua'||String(x.Kategori||'').trim()===cmsCategory;
-   const hay=[x.Judul,x.Ringkasan,x.Isi,x.Kategori].map(v=>String(v||'').toLowerCase()).join(' ');
-   return category&&(!q||hay.includes(q));
- });
- if(!filtered.length){grid.innerHTML='<div class="empty-search">🔎 Tidak ada konten yang cocok.</div>';return}
- grid.innerHTML=filtered.map((x,i)=>{
-   const imageSrc=driveImageURL(x.MediaURL)||x.MediaDataURL||'';
-   const media=imageSrc?'<img class="cms-media" src="'+escCMS(imageSrc)+'" alt="'+escCMS(x.Judul||'')+'" loading="lazy">':'<div class="cms-media" style="display:grid;place-items:center;font-size:40px">✨</div>';
-   const date=x.Tanggal?String(x.Tanggal).slice(0,10):'';
-   return '<article class="card cms-card" data-index="'+i+'">'+media+'<div class="cms-body"><div class="eyebrow">'+escCMS(x.Kategori||'MATA HATI')+'</div><h3>'+escCMS(x.Judul||'Tanpa judul')+'</h3><p>'+escCMS(x.Ringkasan||'')+'</p><div class="cms-meta"><span>'+escCMS(x.Penulis||'MATA HATI')+'</span><span>'+escCMS(date)+'</span></div><span class="read-more">Baca selengkapnya →</span></div></article>';
- }).join('');
- grid.querySelectorAll('.cms-card').forEach((card,i)=>card.addEventListener('click',()=>openArticle(filtered[i])));
+ visibleItems=cmsItems.filter(x=>{const cat=cmsCategory==='Semua'||String(x.Kategori||'').trim()===cmsCategory;const hay=[x.Judul,x.Ringkasan,x.Isi,x.Kategori,x.Penulis].map(v=>String(v||'').toLowerCase()).join(' ');return cat&&(!q||hay.includes(q))});
+ const grid=document.getElementById('cmsGrid');
+ if(!visibleItems.length){grid.innerHTML='<div class="empty">🔎 Tidak ada konten yang cocok.</div>';return}
+ grid.innerHTML=visibleItems.map((x,i)=>{const img=imageFor(x);const media=img?'<img class="cms-media" src="'+esc(img)+'" alt="'+esc(x.Judul||'')+'" loading="lazy">':'<div class="cms-media" style="display:grid;place-items:center;font-size:42px">✨</div>';return '<article class="card cms-card" data-i="'+i+'">'+media+'<div class="cms-body"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h3>'+esc(x.Judul||'Tanpa judul')+'</h3><p>'+esc(x.Ringkasan||'')+'</p><div class="cms-meta"><span>'+esc(x.Penulis||'MATA HATI')+'</span><span>'+esc(dateFor(x))+'</span></div><span class="read-more">Baca selengkapnya →</span></div></article>'}).join('');
+ grid.querySelectorAll('.cms-card').forEach(card=>card.onclick=()=>openArticle(Number(card.dataset.i)));
 }
 
-function openArticle(x){
- const modal=document.getElementById('articleModal');
- const body=document.getElementById('modalBody');
- const imageSrc=driveImageURL(x.MediaURL)||x.MediaDataURL||'';
- const video=x.VideoURL?String(x.VideoURL):'';
- const videoEmbed=video.includes('youtube.com/watch')?video.replace('watch?v=','embed/').split('&')[0]:video.includes('youtu.be/')?'https://www.youtube.com/embed/'+video.split('youtu.be/')[1].split('?')[0]:'';
- body.innerHTML=(imageSrc?'<img class="modal-cover" src="'+escCMS(imageSrc)+'" alt="'+escCMS(x.Judul||'')+'">':'')+'<div class="modal-content"><div class="eyebrow">'+escCMS(x.Kategori||'MATA HATI')+'</div><h2>'+escCMS(x.Judul||'Tanpa judul')+'</h2><div class="cms-meta"><span>'+escCMS(x.Penulis||'MATA HATI')+'</span><span>'+escCMS(String(x.Tanggal||'').slice(0,10))+'</span></div><p class="article-body">'+escCMS(x.Isi||x.Ringkasan||'')+'</p>'+(videoEmbed?'<iframe class="modal-video" src="'+escCMS(videoEmbed)+'" title="'+escCMS(x.Judul||'Video')+'" allowfullscreen></iframe>':(video?'<p><a href="'+escCMS(video)+'" target="_blank" rel="noopener" style="color:var(--a)">▶ Buka video</a></p>':''))+'<div class="modal-actions"><button onclick="shareArticle()">↗ Bagikan</button><button onclick="closeArticle()">Tutup</button></div></div>';
- modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
- window.currentArticle=x;
+function drawGallery(){
+ const grid=document.getElementById('galleryGrid');
+ const items=cmsItems.filter(x=>imageFor(x));
+ if(!items.length){grid.innerHTML='<div class="empty">Belum ada foto publik.</div>';return}
+ grid.innerHTML=items.map(x=>'<div class="gallery-item" title="'+esc(x.Judul||'')+'"><img src="'+esc(imageFor(x))+'" alt="'+esc(x.Judul||'')+'" loading="lazy"><div class="gallery-caption">'+esc(x.Judul||'')+'</div></div>').join('');
+ grid.querySelectorAll('.gallery-item').forEach((el,i)=>el.onclick=()=>openArticleById(items[i].ID));
 }
 
-function closeArticle(){const m=document.getElementById('articleModal');m.classList.remove('show');m.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-async function shareArticle(){const x=window.currentArticle||{};try{await navigator.share({title:x.Judul||'MATA HATI',text:x.Ringkasan||'',url:location.href})}catch(e){try{await navigator.clipboard.writeText(location.href);alert('Alamat MATA HATI disalin.')}catch(_){}}}
-function escCMS(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function driveImageURL(url){
- const s=String(url||'').trim();
- if(!s)return '';
- const m=s.match(/[?&]id=([A-Za-z0-9_-]+)/)||s.match(/\/d\/([A-Za-z0-9_-]+)/);
- return m ? 'https://lh3.googleusercontent.com/d/'+encodeURIComponent(m[1]) : '';
+function drawVideos(){
+ const grid=document.getElementById('videoGrid');
+ const items=cmsItems.filter(x=>x.VideoURL);
+ if(!items.length){grid.innerHTML='<div class="empty">Belum ada video publik.</div>';return}
+ grid.innerHTML=items.map(x=>'<article class="video-card"><div class="video-thumb">▶</div><div class="eyebrow">'+esc(x.Kategori||'Video')+'</div><h3>'+esc(x.Judul||'Video MATA HATI')+'</h3><p>'+esc(x.Ringkasan||'')+'</p><button class="small-btn" style="margin-top:12px" data-id="'+esc(x.ID)+'">Tonton →</button></article>').join('');
+ grid.querySelectorAll('button[data-id]').forEach(btn=>btn.onclick=()=>openArticleById(btn.dataset.id));
 }
 
-document.getElementById('cmsSearch').addEventListener('input',e=>{cmsQuery=e.target.value;drawCMS()});
-document.getElementById('modalClose').addEventListener('click',closeArticle);
-document.getElementById('articleModal').addEventListener('click',e=>{if(e.target.id==='articleModal')closeArticle()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeArticle()});
+function relatedHTML(x){
+ const related=cmsItems.filter(y=>y.ID!==x.ID&&String(y.Kategori||'')===String(x.Kategori||'')).slice(0,4);
+ if(!related.length)return '';
+ return '<div class="related"><div class="eyebrow">BACA JUGA</div><div class="related-grid">'+related.map(y=>'<button class="related-item" data-id="'+esc(y.ID)+'"><small>'+esc(y.Kategori||'MATA HATI')+'</small><span>'+esc(y.Judul||'Tanpa judul')+'</span></button>').join('')+'</div></div>';
+}
+
+function openArticleById(id){const i=visibleItems.findIndex(x=>String(x.ID)===String(id));if(i>=0)openArticle(i);else{const x=cmsItems.find(y=>String(y.ID)===String(id));if(x){visibleItems=[x];openArticle(0)}}}
+
+function openArticle(i){
+ if(!visibleItems[i])return;
+ currentIndex=i;
+ const x=visibleItems[i],img=imageFor(x),video=String(x.VideoURL||''),embed=videoEmbed(video);
+ const body=document.getElementById('readerBody');
+ body.innerHTML=(img?'<img class="reader-cover" src="'+esc(img)+'" alt="'+esc(x.Judul||'')+'">':'')+
+ '<div class="reader-content"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h2>'+esc(x.Judul||'Tanpa judul')+'</h2>'+
+ '<div class="reader-meta"><span>✍ '+esc(x.Penulis||'MATA HATI')+'</span><span>📅 '+esc(dateFor(x))+'</span></div>'+
+ '<p class="reader-lead">'+esc(x.Ringkasan||'')+'</p><div class="article-body">'+esc(x.Isi||x.Ringkasan||'')+'</div>'+
+ (embed?'<iframe class="reader-video" src="'+esc(embed)+'" title="'+esc(x.Judul||'Video')+'" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share" allowfullscreen></iframe>':(video?'<p style="margin-top:20px"><a href="'+esc(video)+'" target="_blank" rel="noopener" style="color:var(--a);font-weight:800">▶ Buka video</a></p>':''))+
+ '<div class="reader-actions"><button onclick="shareArticle()">↗ Bagikan</button><button onclick="closeArticle()">Tutup</button></div>'+
+ '<div class="reader-nav"><button id="prevBtn" '+(i<=0?'disabled':'')+'>← Sebelumnya</button><button id="nextBtn" '+(i>=visibleItems.length-1?'disabled':'')+'>Berikutnya →</button></div>'+
+ relatedHTML(x)+'</div>';
+ document.getElementById('prevBtn').onclick=()=>openArticle(currentIndex-1);
+ document.getElementById('nextBtn').onclick=()=>openArticle(currentIndex+1);
+ body.querySelectorAll('.related-item').forEach(b=>b.onclick=()=>openArticleById(b.dataset.id));
+ document.getElementById('readerPosition').textContent=(i+1)+' / '+visibleItems.length;
+ const modal=document.getElementById('articleModal');modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+ try{history.replaceState(null,'','#artikel='+encodeURIComponent(x.ID||''))}catch(e){}
+}
+
+function closeArticle(){const m=document.getElementById('articleModal');m.classList.remove('show');m.setAttribute('aria-hidden','true');document.body.style.overflow='';if(location.hash.startsWith('#artikel=')){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}}
+async function shareArticle(){const x=visibleItems[currentIndex]||{};const url=location.href;try{if(navigator.share)await navigator.share({title:x.Judul||'MATA HATI',text:x.Ringkasan||'',url});else{await navigator.clipboard.writeText(url);alert('Tautan artikel disalin.')}}catch(e){}}
+
+document.getElementById('cmsSearch').oninput=e=>{cmsQuery=e.target.value;drawCMS()};
+document.getElementById('modalClose').onclick=closeArticle;
+document.getElementById('articleModal').onclick=e=>{if(e.target.id==='articleModal')closeArticle()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeArticle();if(e.key==='ArrowLeft'&&!e.target.matches('input,textarea'))openArticle(currentIndex-1);if(e.key==='ArrowRight'&&!e.target.matches('input,textarea'))openArticle(currentIndex+1)});
+addEventListener('online',()=>document.getElementById('offline').classList.remove('show'));
+addEventListener('offline',()=>document.getElementById('offline').classList.add('show'));
+
+function openHashArticle(){if(!location.hash.startsWith('#artikel='))return;const id=decodeURIComponent(location.hash.slice(9));const x=cmsItems.find(y=>String(y.ID)===id);if(x){visibleItems=[...cmsItems];openArticle(visibleItems.findIndex(y=>String(y.ID)===id))}}
+addEventListener('hashchange',openHashArticle);
 
 function loadCMS(){
  const url=window.MATA_HATI_CMS_API;
- if(!url)return;
- const cb='mataHatiCMS_'+Date.now();
- window[cb]=data=>{try{renderCMS(data.items||[])}finally{delete window[cb];script.remove()}};
+ if(!url){renderCMS(loadOffline(),true);return}
+ const cb='mataHatiCMS';
+ window[cb]=data=>{try{if(data&&data.ok)renderCMS(data.items||[])}finally{delete window[cb];if(script.parentNode)script.remove()}};
  const script=document.createElement('script');
  script.src=url+(url.includes('?')?'&':'?')+'action=public&callback='+cb;
- script.onerror=()=>{delete window[cb]};
+ script.onerror=()=>{const cached=loadOffline();if(cached.length){renderCMS(cached,true)}document.getElementById('offline').classList.add('show');delete window[cb];if(script.parentNode)script.remove()};
  document.head.appendChild(script);
 }
-if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js'));
-addEventListener('load',()=>{setTimeout(()=>document.getElementById('splash').classList.add('hide'),700);loadCMS()});
+
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+addEventListener('load',()=>{setTimeout(()=>document.getElementById('splash').classList.add('hide'),650);loadCMS();});
 </script>
-</body></html>
+</body>
+</html>
