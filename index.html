@@ -141,7 +141,7 @@ let deferredPrompt=null;
 let cmsItems=[];
 let visibleItems=[];
 let cmsCategory='Semua';
-let cmsQuery='';
+let cmsQuery='';let cmsMode='all';
 let currentIndex=-1;
 const CACHE_KEY='MATA_HATI_CONTENT_V8';
 const FAVORITES_KEY='MATA_HATI_FAVORITES_V81';
@@ -196,8 +196,8 @@ function drawPortalSections(){
  fg.innerHTML=fav.length?fav.map(x=>'<article class="card cms-card" data-fav="'+esc(x.ID)+'">'+(imageFor(x)?'<img class="cms-media" src="'+esc(imageFor(x))+'" alt="" loading="lazy">':'<div class="cms-media" style="display:grid;place-items:center;font-size:40px">♥</div>')+'<div class="cms-body"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h3>'+esc(x.Judul||'Tanpa judul')+'</h3><p>'+esc(x.Ringkasan||'')+'</p><span class="read-more">Buka →</span></div></article>').join(''):'<div class="empty favorite-empty">♡ Belum ada artikel favorit. Simpan artikel dari Reader.</div>';
  fg.querySelectorAll('[data-fav]').forEach(el=>el.onclick=()=>openArticleById(el.dataset.fav));
  const cats=[...new Set(cmsItems.map(x=>String(x.Kategori||'').trim()).filter(Boolean))],ct=document.getElementById('categoryTabs');
- ct.innerHTML=['Semua',...cats].map(x=>'<button class="media-tab '+(x==='Semua'?'active':'')+'" data-media-cat="'+esc(x)+'">'+esc(x)+'</button>').join('');
- ct.querySelectorAll('[data-media-cat]').forEach(b=>b.onclick=()=>{cmsCategory=b.dataset.mediaCat;document.getElementById('jelajah').scrollIntoView({behavior:'smooth'});document.querySelectorAll('#cmsChips .chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===cmsCategory));drawCMS()});
+ const mediaCats=['Semua','Foto','Video',...cats.filter(x=>x.toLowerCase()!=='foto'&&x.toLowerCase()!=='video')];ct.innerHTML=mediaCats.map(x=>'<button class="media-tab '+(x==='Semua'?'active':'')+'" data-media-cat="'+esc(x)+'">'+(x==='Foto'?'🖼️ ':x==='Video'?'🎬 ':x==='Semua'?'✦ ':'')+esc(x)+'</button>').join('');
+ ct.querySelectorAll('[data-media-cat]').forEach(b=>b.onclick=()=>{const v=b.dataset.mediaCat;cmsMode=v==='Foto'?'photo':v==='Video'?'video':'all';cmsCategory=v;document.getElementById('jelajah').scrollIntoView({behavior:'smooth'});document.querySelectorAll('#cmsChips .chip').forEach(x=>x.classList.toggle('active',cmsMode==='all'&&x.dataset.cat===cmsCategory));drawCMS()});
  drawSlideshow();
 }
 function updateStats(){document.getElementById('statArticles').textContent=cmsItems.length;document.getElementById('statPhotos').textContent=cmsItems.filter(x=>imageFor(x)).length;document.getElementById('statVideos').textContent=cmsItems.filter(x=>x.VideoURL).length}
@@ -205,7 +205,7 @@ function drawSlideshow(){const items=sortedByDate(cmsItems.filter(x=>imageFor(x)
 function showSlide(i){const slides=document.querySelectorAll('#mediaSlideshow .slide'),dots=document.querySelectorAll('#mediaSlideshow .slide-dot');if(!slides.length)return;slideIndex=(i+slides.length)%slides.length;slides.forEach((s,n)=>s.classList.toggle('active',n===slideIndex));dots.forEach((d,n)=>d.classList.toggle('active',n===slideIndex))}
 function drawCMS(){
  const q=cmsQuery.toLowerCase().trim();
- visibleItems=cmsItems.filter(x=>{const cat=cmsCategory==='Semua'||String(x.Kategori||'').trim()===cmsCategory;const hay=[x.Judul,x.Ringkasan,x.Isi,x.Kategori,x.Penulis].map(v=>String(v||'').toLowerCase()).join(' ');return cat&&(!q||hay.includes(q))});
+ visibleItems=cmsItems.filter(x=>{const cat=cmsMode==='all'&&(cmsCategory==='Semua'||String(x.Kategori||'').trim()===cmsCategory)||cmsMode==='photo'&&!!imageFor(x)||cmsMode==='video'&&!!x.VideoURL;const hay=[x.Judul,x.Ringkasan,x.Isi,x.Kategori,x.Penulis].map(v=>String(v||'').toLowerCase()).join(' ');return cat&&(!q||hay.includes(q))});
  const grid=document.getElementById('cmsGrid');
  if(!visibleItems.length){grid.innerHTML='<div class="empty">🔎 Tidak ada konten yang cocok.</div>';return}
  grid.innerHTML=visibleItems.map((x,i)=>{const img=imageFor(x);const media=img?'<img class="cms-media" src="'+esc(img)+'" alt="'+esc(x.Judul||'')+'" loading="lazy">':'<div class="cms-media" style="display:grid;place-items:center;font-size:42px">✨</div>';return '<article class="card cms-card" data-i="'+i+'">'+media+'<div class="cms-body"><div class="eyebrow">'+esc(x.Kategori||'MATA HATI')+'</div><h3>'+esc(x.Judul||'Tanpa judul')+'</h3><p>'+esc(x.Ringkasan||'')+'</p><div class="cms-meta"><span>'+esc(x.Penulis||'MATA HATI')+'</span><span>'+esc(dateFor(x))+'</span></div><span class="read-more">Baca selengkapnya →</span></div></article>'}).join('');
