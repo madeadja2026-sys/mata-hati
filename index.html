@@ -31,11 +31,15 @@
 .offline{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:60;background:#ffd166;color:#132333;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:800;box-shadow:0 8px 30px #0005;display:none}.offline.show{display:block}
 @media(max-width:900px){.ranking{grid-template-columns:1fr 1fr}.stats-strip{grid-template-columns:repeat(3,1fr)}}.grid{grid-template-columns:repeat(2,1fr)}.feature-grid{grid-template-columns:1fr 1fr}.video-grid{grid-template-columns:repeat(2,1fr)}.gallery-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:650px){.ranking{grid-template-columns:1fr}.stats-strip{grid-template-columns:1fr 1fr}.stats-strip .stat-box:last-child{grid-column:1/-1}.feature-hero{grid-template-columns:1fr}.feature-image{min-height:210px;order:-1}.feature-copy{padding:22px}.feature-image:after{background:linear-gradient(180deg,#071a2b33,#071a2b88)}.backtop{bottom:88px;right:12px}.lightbox{padding:8px}.lightbox-prev{left:8px}.lightbox-next{right:8px}.app{padding:10px 12px calc(95px + env(safe-area-inset-bottom))}.top{padding-bottom:14px}.brand b{font-size:16px}.brand span{font-size:10px}.logo{width:42px;height:42px}.hero{padding:30px 20px;border-radius:24px}.hero h1{font-size:44px}.hero p{font-size:15px}.grid,.feature-grid,.video-grid{grid-template-columns:1fr}.gallery-grid{grid-template-columns:repeat(2,1fr)}.cms-media{height:190px}.reader{border-radius:20px}.reader-content{padding:22px 17px 28px}.reader-cover{max-height:360px}.related-grid{grid-template-columns:1fr}.bottom{width:calc(100% - 14px)}.nav{min-width:60px;padding:7px 6px}}
-</style>
+.update-banner{position:fixed;left:12px;right:12px;bottom:78px;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid #ffffff22;border-radius:16px;background:#102f45ee;backdrop-filter:blur(12px);box-shadow:0 14px 35px #0008;color:var(--text);font-size:13px}.update-banner[hidden]{display:none!important}.update-actions{display:flex;gap:7px;flex-shrink:0}.update-actions button{border:0;border-radius:10px;padding:8px 11px;font-weight:700;cursor:pointer}.update-now{background:var(--a);color:#052018}.update-later{background:#ffffff14;color:var(--text)}@media(max-width:560px){.update-banner{align-items:flex-start;flex-direction:column}.update-actions{width:100%}.update-actions button{flex:1}}</style>
 </head>
 <body>
 <div id="splash"><div class="splash-inner"><img class="splash-icon" src="icon-512.png" alt="MATA HATI"><div class="splash-name">MATA HATI</div><div class="splash-sub">Ruang untuk makna, cerita & kepedulian</div></div></div>
 <div id="offline" class="offline">Mode offline — menampilkan konten tersimpan</div>
+<div id="updateBanner" class="update-banner" hidden>
+  <div><strong>✨ Versi baru MATA HATI tersedia.</strong><br><span style="opacity:.78">Perbarui agar mendapatkan fitur dan konten terbaru.</span></div>
+  <div class="update-actions"><button id="updateLater" class="update-later">Nanti</button><button id="updateNow" class="update-now">Perbarui Sekarang</button></div>
+</div>
 <main class="app">
 <header class="top"><div class="brand"><div class="logo"><img src="icon-192.png" alt=""></div><div><b>MATA HATI</b><span>Portal makna, cerita & kepedulian</span></div></div><div style="display:flex;gap:8px;align-items:center"><button id="dataSaverBtn" class="small-btn" title="Mode hemat data">⚡ Hemat</button><button id="installBtn" class="install" hidden>＋ Pasang</button></div></header>
 
@@ -165,8 +169,71 @@ let favoriteIds=new Set();
 let galleryItems=[];let galleryIndex=0;
 
 const installBtn=document.getElementById('installBtn');
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});
-installBtn.onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true};
+let swRegistration=null;
+let updateWorker=null;
+let refreshing=false;
+
+function showInstallButton(){
+  if(deferredPrompt) installBtn.hidden=false;
+}
+addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  installBtn.hidden=false;
+});
+addEventListener('appinstalled',()=>{
+  deferredPrompt=null;
+  installBtn.hidden=true;
+});
+installBtn.onclick=async()=>{
+  if(!deferredPrompt){
+    alert('Jika tombol Pasang belum aktif, buka MATA HATI langsung di Chrome melalui alamat resminya, lalu tunggu beberapa detik. Jika tetap tidak muncul, gunakan menu Chrome ⋮ > Tambahkan ke layar utama / Instal aplikasi.');
+    return;
+  }
+  deferredPrompt.prompt();
+  try{await deferredPrompt.userChoice}catch(_){}
+  deferredPrompt=null;
+  installBtn.hidden=true;
+};
+
+function showUpdate(reg){
+  updateWorker=reg.waiting;
+  const banner=document.getElementById('updateBanner');
+  if(banner) banner.hidden=false;
+}
+document.getElementById('updateLater').onclick=()=>{document.getElementById('updateBanner').hidden=true};
+document.getElementById('updateNow').onclick=()=>{
+  const w=updateWorker||swRegistration?.waiting;
+  if(!w)return;
+  refreshing=true;
+  w.postMessage({type:'SKIP_WAITING'});
+};
+
+if('serviceWorker' in navigator){
+  addEventListener('load',async()=>{
+    try{
+      swRegistration=await navigator.serviceWorker.register('service-worker.js');
+      if(swRegistration.waiting && navigator.serviceWorker.controller) showUpdate(swRegistration);
+      swRegistration.addEventListener('updatefound',()=>{
+        const worker=swRegistration.installing;
+        if(!worker)return;
+        worker.addEventListener('statechange',()=>{
+          if(worker.state==='installed' && navigator.serviceWorker.controller) showUpdate(swRegistration);
+        });
+      });
+      setTimeout(()=>swRegistration.update().catch(()=>{}),1200);
+      setInterval(()=>{
+        if(document.visibilityState==='visible') swRegistration.update().catch(()=>{});
+      },300000);
+    }catch(_){}
+  });
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(refreshing){
+      refreshing=false;
+      location.reload();
+    }
+  });
+}
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function driveImageURL(url){const s=String(url||'').trim();if(!s)return '';const m=s.match(/[?&]id=([A-Za-z0-9_-]+)/)||s.match(/\/d\/([A-Za-z0-9_-]+)/);return m?'https://lh3.googleusercontent.com/d/'+encodeURIComponent(m[1]):''}
