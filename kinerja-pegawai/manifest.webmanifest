@@ -1,0 +1,19 @@
+{
+  "name": "Dashboard Kinerja Pegawai",
+  "short_name": "Kinerja",
+  "description": "Monitoring dan evaluasi kinerja pegawai",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f7f5",
+  "theme_color": "#123b32",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
