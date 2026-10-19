@@ -47,7 +47,21 @@
 <button class="ghost" id="wordBtn">✦ Bengkel Kata</button>
 <button class="ghost" id="structureBtn">▤ Periksa Struktur</button>
 </div>
-<div id="reviewOutput" class="mini" style="margin-top:12px"><h3>Hasil ulasan</h3><p>Ketuk Bedah Puisi setelah menulis atau membuka karya. Hasil merupakan panduan awal, bukan vonis mutlak atas nilai sastra.</p></div>
+<div id="reviewOutput" class="mini" style="margin-top:12px"><h3>Hasil ulasan lokal</h3><p>Ketuk Bedah Puisi setelah menulis atau membuka karya. Hasil lokal menjadi pemeriksaan awal; gunakan jembatan AI online di bawah untuk tafsir dan pilihan yang lebih luas.</p></div>
+<div class="mini" style="margin-top:12px" id="onlineAIStudio">
+<h3>🌐 Perspektif AI Online</h3>
+<p class="sub">Hubungkan ketiga bengkel dengan ChatGPT online. Pilih jenis bantuan; aplikasi menyiapkan instruksi khusus beserta puisi Anda, lalu menyalinnya agar mudah ditempel di ChatGPT. Setelah AI menjawab, salin jawabannya kembali ke ruang hasil di bawah. Naskah tidak dikirim otomatis.</p>
+<div class="actions">
+<button class="primary" id="aiReviewBtn">AI: Bedah Puisi</button>
+<button class="ghost" id="aiWordBtn">AI: Bengkel Kata</button>
+<button class="ghost" id="aiStructureBtn">AI: Struktur</button>
+</div>
+<div class="field" style="margin-top:10px"><label for="aiPrompt">Instruksi yang disiapkan untuk AI</label><textarea id="aiPrompt" rows="7" placeholder="Pilih salah satu tombol AI. Instruksi dan puisi akan muncul di sini."></textarea></div>
+<div class="actions"><button class="ghost" id="copyAIPromptBtn">Salin instruksi AI</button><button class="ghost" id="openAIChatBtn">Buka ChatGPT</button></div>
+<div class="field" style="margin-top:10px"><label for="aiResponse">Tempel jawaban AI di sini (opsional)</label><textarea id="aiResponse" rows="7" placeholder="Setelah mendapat jawaban di ChatGPT, salin dan tempelkan di sini untuk dibaca atau dijadikan bahan revisi."></textarea></div>
+<div class="actions"><button class="ghost" id="copyAIResponseBtn">Salin jawaban AI ke ruang revisi</button></div>
+<div id="aiStatus" class="notice">Mode ini memakai ChatGPT melalui browser. Ini bukan koneksi API otomatis; Anda tetap memilih kapan mengirim puisi dan dapat memeriksa isi instruksi terlebih dahulu.</div>
+</div>
 <div id="wordOutput" class="mini" style="margin-top:10px"><h3>Bengkel Kata</h3><p>Gunakan untuk menemukan kata umum atau pengulangan yang mungkin bisa dipertajam.</p></div>
 <div class="field" style="margin-top:12px"><label for="revisionText">Ruang revisi — salinan terpisah</label><textarea id="revisionText" rows="8" placeholder="Ketuk ‘Siapkan salinan untuk revisi’ agar teks puisi disalin ke sini. Naskah asli tidak berubah."></textarea></div>
 <div class="actions">
@@ -148,6 +162,33 @@ function structureWorkshop(){
 $('reviewBtn').addEventListener('click',analyzePoem);
 $('wordBtn').addEventListener('click',wordWorkshop);
 $('structureBtn').addEventListener('click',structureWorkshop);
+
+function makeOnlinePrompt(mode){
+ const poem=getPoemText().trim();
+ const title=$('poemTitle').value.trim()||'Tanpa judul';
+ const kind=$('reviewType').value;
+ const focus=$('reviewFocus').value;
+ if(!poem){alert('Tulis atau pilih puisi terlebih dahulu.');return}
+ const shared='Anda adalah editor sastra Indonesia yang teliti, peka, dan menghargai suara asli penulis. Analisis dalam bahasa Indonesia. Jangan menganggap tafsir Anda sebagai satu-satunya kebenaran. Bedakan pengamatan tekstual dari tafsir. Jangan menulis ulang seluruh puisi tanpa diminta. Berikan beberapa pilihan dan jelaskan konsekuensi artistiknya. Pertahankan maksud, suara, dan keunikan penulis; hindari pujian kosong.\n\nJudul: '+title+'\nJenis puisi: '+kind+'\nFokus pilihan penulis: '+focus+'\n\nNASKAH ASLI:\n'+poem+'\n\n';
+ let task='';
+ if(mode==='review') task='TUGAS — BEDAH PUISI\n1. Ringkas pembacaan utama dan 2-3 kemungkinan tafsir berbeda.\n2. Bahas tema, suasana, imaji, simbol, metafora, sudut pandang, dan emosi.\n3. Tunjukkan baris yang paling kuat beserta alasannya.\n4. Tunjukkan bagian yang terasa umum, kabur, berulang, atau kurang terhubung; kutip potongan pendek yang relevan.\n5. Jelaskan keutuhan dan dampak penutup.\n6. Beri 3 arah pengembangan yang berbeda (misalnya lebih lirih, tajam, atau kontemplatif), tanpa memaksakan satu versi.';
+ if(mode==='words') task='TUGAS — BENGKEL KATA\n1. Pilih kata/frasa yang paling hidup dan jelaskan mengapa.\n2. Temukan diksi yang mungkin umum, abstrak, berulang, atau kurang tepat—jangan menganggapnya salah secara otomatis.\n3. Untuk setiap bagian terpilih, berikan 3-5 alternatif dengan nuansa berbeda (sederhana, puitis, konkret, simbolik, tajam).\n4. Tampilkan contoh baris sebelum/sesudah secara terpisah.\n5. Jelaskan perubahan makna, nada, ritme, dan citraan dari tiap pilihan. Jangan mengganti semua kata hanya demi terdengar indah.';
+ if(mode==='structure') task='TUGAS — PEMERIKSAAN STRUKTUR\n1. Petakan fungsi tiap bait/baris: pembukaan, pengembangan, pergeseran, klimaks, dan penutup.\n2. Periksa alur emosi, kesinambungan gagasan, perpindahan antarbagian, ritme, serta kekuatan akhir.\n3. Tandai bagian yang terasa meloncat, terlalu menjelaskan, atau mengulang; jelaskan alasannya.\n4. Berikan 2-3 pilihan susunan/arah struktur, bila memang diperlukan.\n5. Jangan menganggap puisi harus mengikuti struktur baku; jelaskan juga jika ketidakteraturan justru memberi efek artistik.';
+ return shared+task+'\n\nAkhiri dengan pilihan yang dapat saya pertimbangkan, bukan keputusan final atas nama penulis.';
+}
+async function startOnlineAI(mode){
+ const prompt=makeOnlinePrompt(mode); if(!prompt)return;
+ $('aiPrompt').value=prompt;
+ $('aiStatus').textContent='Instruksi sudah disiapkan. Periksa teksnya, salin, lalu tempel ke percakapan ChatGPT yang terbuka. Puisi tidak dikirim otomatis oleh aplikasi.';
+ try{await navigator.clipboard.writeText(prompt);$('aiStatus').textContent='Instruksi dan puisi sudah disalin ke papan klip. ChatGPT akan dibuka; tempelkan teks di kolom percakapan lalu kirim.'}catch(e){$('aiStatus').textContent='Instruksi sudah disiapkan di kotak teks, tetapi penyalinan otomatis tidak tersedia. Tekan “Salin instruksi AI”, lalu buka ChatGPT dan tempelkan.'}
+ window.open('https://chatgpt.com/','_blank','noopener');
+}
+$('aiReviewBtn').addEventListener('click',()=>startOnlineAI('review'));
+$('aiWordBtn').addEventListener('click',()=>startOnlineAI('words'));
+$('aiStructureBtn').addEventListener('click',()=>startOnlineAI('structure'));
+$('copyAIPromptBtn').addEventListener('click',async()=>{const p=$('aiPrompt').value;if(!p){alert('Pilih salah satu tombol AI terlebih dahulu.');return}try{await navigator.clipboard.writeText(p);$('aiStatus').textContent='Instruksi AI berhasil disalin.'}catch(e){$('aiPrompt').focus();$('aiPrompt').select();$('aiStatus').textContent='Pilih teks instruksi, lalu gunakan Salin dari menu perangkat.'}});
+$('openAIChatBtn').addEventListener('click',()=>window.open('https://chatgpt.com/','_blank','noopener'));
+$('copyAIResponseBtn').addEventListener('click',()=>{const answer=$('aiResponse').value.trim();if(!answer){alert('Tempel jawaban AI terlebih dahulu.');return} $('revisionText').value=answer;$('compareOutput').textContent='Jawaban AI disalin ke ruang revisi. Periksa dan sunting dahulu; teks asli belum berubah.';$('revisionText').scrollIntoView({behavior:'smooth',block:'center'})});
 $('copyToRevisionBtn').addEventListener('click',()=>{$('revisionText').value=getPoemText();$('compareOutput').textContent='Salinan revisi siap. Naskah asli belum berubah.'});
 $('compareBtn').addEventListener('click',()=>{const a=getPoemText(),b=$('revisionText').value.trim();if(!b){$('compareOutput').textContent='Isi ruang revisi terlebih dahulu.';return}const aw=countWords(a),bw=countWords(b);$('compareOutput').textContent='Naskah asli '+aw+' kata; revisi '+bw+' kata ('+(bw-aw>=0?'+':'')+(bw-aw)+' kata). Periksa juga makna, nada, citraan, dan suara penulis.'});
 $('applyRevisionBtn').addEventListener('click',()=>{const b=$('revisionText').value.trim();if(!b){alert('Ruang revisi masih kosong.');return}if(!confirm('Ganti teks puisi yang sedang terbuka dengan teks revisi? Sebaiknya simpan naskah asli terlebih dahulu.'))return;$('poem').innerText=b;updateStats();$('compareOutput').textContent='Revisi diterapkan ke editor. Tekan Simpan untuk menyimpan perubahan.'});
