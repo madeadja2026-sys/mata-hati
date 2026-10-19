@@ -105,94 +105,52 @@ function escapeHtml(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':
 function analyzePoem(){
  const t=getPoemText(), title=$('poemTitle').value.trim(), focus=$('reviewFocus').value, kind=$('reviewType').value;
  if(!t){$('reviewOutput').innerHTML='<h3>Belum ada puisi</h3><p>Tulis atau buka puisi terlebih dahulu.</p>';return}
- const lines=t.split('\n'), nonempty=lines.filter(x=>x.trim()), stanzas=t.split(/\n\s*\n/).filter(x=>x.trim()), words=t.match(/[A-Za-zÀ-ÿ0-9’'-]+/g)||[];
- const lower=t.toLocaleLowerCase('id-ID');
+ const lines=t.split('\n'), nonempty=lines.filter(x=>x.trim()), stanzas=t.split(/\n\s*\n/).filter(x=>x.trim()), words=t.match(/[A-Za-zÀ-ÿ0-9’'-]+/g)||[], lower=t.toLocaleLowerCase('id-ID');
  const repeated=[...new Set(words.map(w=>w.toLocaleLowerCase('id-ID')).filter(w=>w.length>3))].map(w=>({w,n:words.filter(x=>x.toLocaleLowerCase('id-ID')===w).length})).filter(x=>x.n>=4).sort((a,b)=>b.n-a.n).slice(0,8);
- const generic=['indah','sedih','bahagia','cinta','rindu','gelap','terang','hati','jiwa','air mata','sunyi'];
- const common=generic.filter(w=>lower.includes(w));
- const end=nonempty.slice(-Math.min(3,nonempty.length)).join(' ');
+ const common=['indah','sedih','bahagia','cinta','rindu','gelap','terang','hati','jiwa','air mata','sunyi'].filter(w=>lower.includes(w));
  const positives=[];
- if(stanzas.length>=2)positives.push('Puisi memiliki pembagian bait yang memberi ruang jeda dan perkembangan gagasan.');
- if(words.length>=25)positives.push('Ada ruang untuk membangun suasana atau perkembangan makna, bukan hanya satu pernyataan singkat.');
- if(/[,:;—–]/.test(t))positives.push('Tanda baca memberi peluang mengatur jeda dan tekanan saat dibaca.');
- if(t.includes('\n'))positives.push('Pemenggalan baris dapat digunakan untuk mengatur ritme dan penekanan.');
- if(!positives.length)positives.push('Naskah tersedia untuk dikembangkan; kekuatan paling tepat dinilai dengan membaca maksud dan konteks penulis.');
+ if(stanzas.length>=2)positives.push('Pembagian bait memberi ruang jeda dan kemungkinan perkembangan gagasan.');
+ if(words.length>=25)positives.push('Panjang naskah memberi ruang untuk membangun suasana atau perkembangan makna.');
+ if(/[,:;—–]/.test(t))positives.push('Tanda baca dapat membantu mengatur jeda dan tekanan.');
+ if(t.includes('\n'))positives.push('Pemenggalan baris dapat dipakai untuk mengatur ritme dan penekanan.');
+ if(!positives.length)positives.push('Naskah siap ditelaah lebih lanjut; kekuatan artistik perlu dinilai dengan mempertimbangkan maksud penulis.');
  const cautions=[];
- if(stanzas.length===1&&nonempty.length>6)cautions.push('Naskah hanya memiliki satu kelompok bait. Pertimbangkan pemisahan bait jika ada perubahan gagasan atau emosi.');
- if(words.length<20)cautions.push('Puisi cukup singkat; pastikan setiap kata membawa makna dan penutup terasa disengaja.');
- if(repeated.length)cautions.push('Kata yang cukup sering muncul: '+repeated.map(x=>x.w+' ('+x.n+'×)').join(', ')+'. Periksa apakah pengulangan itu sengaja sebagai motif atau justru berlebihan.');
- if(common.length)cautions.push('Kata atau gagasan yang sering dipakai dalam puisi: '+common.join(', ')+'. Jika terasa umum, tambahkan detail konkret atau citraan khas Anda.');
- if(!/[?!.…]$/.test(end.trim()))cautions.push('Penutup tidak memakai tanda akhir yang tegas. Ini bukan kesalahan, tetapi periksa apakah efek hening/terbuka memang disengaja.');
- if(stanzas.length>=5)cautions.push('Ada banyak bait; periksa apakah setiap bait membawa perkembangan baru dan tidak mengulang fungsi bait sebelumnya.');
- const focusText={umum:'Periksa hubungan judul, pembuka, perkembangan, klimaks, dan penutup.',diksi:'Pilih kata yang tepat dan konkret. Metafora yang kuat membuka makna; metafora berlapis yang tidak jelas dapat mengaburkan pesan.',struktur:'Periksa urutan bait: apakah gagasan dan emosi berkembang, berbelok, lalu mencapai titik yang terasa perlu?',keutuhan:'Tanyakan apakah judul dijawab atau diperdalam oleh isi, dan apakah penutup meninggalkan gema yang sesuai.',bunyi:'Baca lantang. Dengarkan panjang-pendek baris, bunyi yang berulang, jeda, dan kata yang terasa berat di lidah.'}[focus];
- $('reviewOutput').innerHTML='<h3>Bedah Puisi: '+escapeHtml(title||'Tanpa judul')+'</h3><p><b>Jenis:</b> '+escapeHtml(kind)+' · <b>'+words.length+' kata</b> · <b>'+nonempty.length+' baris</b> · <b>'+stanzas.length+' bait</b></p><h3>Kekuatan yang dapat dikembangkan</h3><ul>'+positives.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ul><h3>Hal yang perlu diperiksa</h3>'+(cautions.length?'<ul>'+cautions.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ul>':'<p>Tidak ada pola masalah sederhana yang menonjol. Bukan berarti puisi tidak perlu disunting; bacalah kembali untuk menilai ketepatan makna dan rasa.</p>')+'<h3>Saran sesuai fokus</h3><p>'+escapeHtml(focusText)+'</p><p><b>Pertanyaan penyunting:</b> bagian mana yang paling ingin pembaca ingat setelah selesai membaca?</p><p class="notice">Ulasan ini memakai pola teks sederhana dan tidak dapat memastikan mutu artistik atau maksud penulis hanya dari hitungan.</p>';
+ if(stanzas.length===1&&nonempty.length>6)cautions.push('Naskah hanya memiliki satu kelompok bait. Pertimbangkan pemisahan jika ada perubahan gagasan atau emosi.');
+ if(words.length<20)cautions.push('Puisi cukup singkat; periksa apakah setiap kata membawa makna dan penutup terasa disengaja.');
+ if(repeated.length)cautions.push('Pengulangan kata yang perlu diperiksa: '+repeated.map(x=>x.w+' ('+x.n+'×)').join(', ')+'. Pastikan pengulangan menjadi motif yang disengaja.');
+ if(common.length)cautions.push('Kata/gagasan yang berpotensi umum: '+common.join(', ')+'. Pertimbangkan detail konkret yang khas bagi pengalaman Anda.');
+ if(stanzas.length>=5)cautions.push('Ada banyak bait; periksa apakah setiap bait menambah perkembangan, bukan mengulang fungsi bait sebelumnya.');
+ const focusText={umum:'Periksa hubungan judul, pembuka, perkembangan, klimaks, dan penutup.',diksi:'Pilih kata yang tepat dan konkret; jangan mengganti kata hanya agar terdengar indah.',struktur:'Periksa apakah gagasan dan emosi berkembang secara alami dari bait ke bait.',keutuhan:'Periksa apakah judul, isi, dan penutup saling memperdalam makna.',bunyi:'Baca lantang dan dengarkan ritme, jeda, bunyi berulang, serta panjang baris.'}[focus]||'Baca kembali puisi dengan mempertimbangkan maksud, suasana, dan suara penulis.';
+ $('reviewOutput').innerHTML='<h3>Bedah Puisi: '+escapeHtml(title||'Tanpa judul')+'</h3><p><b>Jenis:</b> '+escapeHtml(kind)+' · <b>'+words.length+' kata</b> · <b>'+nonempty.length+' baris</b> · <b>'+stanzas.length+' bait</b></p><h3>Kekuatan yang mungkin ada</h3><ul>'+positives.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ul><h3>Hal yang perlu diperiksa</h3>'+(cautions.length?'<ul>'+cautions.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ul>':'<p>Tidak ada pola masalah sederhana yang menonjol. Ini bukan jaminan bahwa puisi tidak memerlukan penyuntingan.</p>')+'<h3>Saran penyuntingan</h3><p>'+escapeHtml(focusText)+'</p><p><b>Pertanyaan:</b> bagian mana yang paling ingin pembaca ingat setelah selesai membaca?</p><p class="notice">Ini pemeriksaan teks lokal sederhana, bukan penilaian AI yang memahami semua tafsir sastra.</p>';
 }
 function wordWorkshop(){
- const t=getPoemText(); if(!t){$('wordOutput').innerHTML='<h3>Bengkel Kata</h3><p>Tulis atau buka puisi terlebih dahulu.</p>';return}
+ const t=getPoemText();if(!t){$('wordOutput').innerHTML='<h3>Bengkel Kata</h3><p>Tulis atau buka puisi terlebih dahulu.</p>';return}
  const patterns=[
- [/\\b(sangat indah|indah sekali)\\b/gi,'coba ganti penilaian umum dengan detail yang bisa dilihat, didengar, disentuh, atau diingat'],
- [/\\b(aku sedih|hatiku sedih|merasa sedih)\\b/gi,'coba tampilkan tanda atau tindakan yang membuat pembaca merasakan kesedihan'],
- [/\\b(aku rindu|merindukan)\\b/gi,'coba hadirkan benda, tempat, kebiasaan, atau suara yang menjadi wujud rindu'],
- [/\\b(dalam kegelapan|malam yang gelap)\\b/gi,'coba pilih detail malam yang khas agar suasana tidak terasa generik'],
- [/\\b(air mata)\\b/gi,'periksa apakah air mata diperlukan atau emosi bisa disampaikan lewat gestur/citraan yang lebih pribadi'],
- [/\\b(aku merasa)\\b/gi,'pertimbangkan menghapus “aku merasa” dan langsung menghadirkan pengalaman atau citra'],
- [/\\b(sangat|begitu)\\b/gi,'uji apakah kata penguat ini diperlukan; kata kerja atau citraan yang tepat mungkin lebih kuat']
+ [/\b(sangat indah|indah sekali)\b/gi,'Pertimbangkan detail konkret yang dapat dilihat, didengar, disentuh, atau diingat'],
+ [/\b(aku sedih|hatiku sedih|merasa sedih)\b/gi,'Coba tampilkan tanda atau tindakan yang membuat pembaca merasakan emosi'],
+ [/\b(aku rindu|merindukan)\b/gi,'Hadirkan benda, tempat, kebiasaan, atau suara yang menjadi wujud rindu'],
+ [/\b(dalam kegelapan|malam yang gelap)\b/gi,'Pilih detail malam yang lebih khas agar suasana tidak terasa umum'],
+ [/\b(air mata)\b/gi,'Periksa apakah emosi dapat disampaikan melalui gestur atau citraan yang lebih pribadi'],
+ [/\b(aku merasa)\b/gi,'Pertimbangkan langsung menghadirkan pengalaman atau citra'],
+ [/\b(sangat|begitu)\b/gi,'Uji apakah kata penguat diperlukan atau kata kerja/citraan sudah cukup']
  ];
- const found=[];patterns.forEach(([re,msg])=>{const m=t.match(re);if(m)found.push('<li><b>'+escapeHtml(m[0])+'</b> — '+escapeHtml(msg)+'.</li>')});
- const ws=t.match(/[A-Za-zÀ-ÿ0-9’'-]+/g)||[], low=t.toLocaleLowerCase('id-ID');
- const rep=[...new Set(ws.map(w=>w.toLocaleLowerCase('id-ID')).filter(w=>w.length>3))].map(w=>({w,n:ws.filter(x=>x.toLocaleLowerCase('id-ID')===w).length})).filter(x=>x.n>=3).sort((a,b)=>b.n-a.n).slice(0,8);
- if(rep.length)found.push('<li><b>Pengulangan:</b> '+rep.map(x=>escapeHtml(x.w)+' ('+x.n+'×)').join(', ')+'. Tentukan mana yang menjadi motif sengaja dan mana yang bisa diganti.</li>');
- $('wordOutput').innerHTML='<h3>Bengkel Kata</h3>'+(found.length?'<p>Petunjuk yang mungkin relevan:</p><ul>'+found.join('')+'</ul>':'<p>Tidak ditemukan frasa umum dari daftar pemeriksaan dasar. Baca lantang dan tandai kata yang terasa abstrak, berulang, atau kurang tepat bagi maksud Anda.</p>')+'<p><b>Prinsip:</b> jangan mengganti kata hanya demi terdengar indah; pilih kata yang paling setia pada maksud dan suara penulis.</p>';
+ const found=[];for(const [re,msg] of patterns){const m=t.match(re);if(m)found.push('<li><b>'+escapeHtml(m[0])+'</b> — '+escapeHtml(msg)+'.</li>')}
+ const ws=t.match(/[A-Za-zÀ-ÿ0-9’'-]+/g)||[],rep=[...new Set(ws.map(w=>w.toLocaleLowerCase('id-ID')).filter(w=>w.length>3))].map(w=>({w,n:ws.filter(x=>x.toLocaleLowerCase('id-ID')===w).length})).filter(x=>x.n>=3).sort((a,b)=>b.n-a.n).slice(0,8);
+ if(rep.length)found.push('<li><b>Pengulangan:</b> '+rep.map(x=>escapeHtml(x.w)+' ('+x.n+'×)').join(', ')+'. Tentukan apakah pengulangan disengaja sebagai motif.</li>');
+ $('wordOutput').innerHTML='<h3>Bengkel Kata</h3>'+(found.length?'<p>Petunjuk yang mungkin relevan:</p><ul>'+found.join('')+'</ul>':'<p>Tidak ditemukan frasa umum dari daftar pemeriksaan dasar. Baca lantang dan tandai kata yang terasa abstrak atau kurang tepat.</p>')+'<p><b>Prinsip:</b> pilih kata yang setia pada maksud dan suara penulis.</p>';
 }
-function structureWorkshop(){analyzePoem();const t=getPoemText(),stanzas=t.split(/\n\s*\n/).filter(x=>x.trim()),lines=t.split('\n').filter(x=>x.trim());if(!t)return;const notes=[];notes.push('Pembuka: apakah baris awal membangun suasana, pertanyaan, citra, atau konflik yang menarik?');notes.push('Perkembangan: apakah setiap bait menambahkan sesuatu, atau mengulang gagasan yang sama?');notes.push('Klimaks: tandai baris dengan tekanan emosi atau perubahan makna paling kuat. Tidak semua puisi membutuhkan klimaks dramatis.');notes.push('Penutup: apakah akhir terasa diperoleh dari perjalanan puisi, bukan sekadar menjelaskan pesan?');notes.push('Bentuk: baca lantang untuk menguji jeda, panjang baris, dan perpindahan antarbait.');$('reviewOutput').innerHTML+='<h3>Daftar periksa struktur ('+stanzas.length+' bait, '+lines.length+' baris)</h3><ol>'+notes.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ol>';}
-$('reviewBtn').onclick=analyzePoem;$('wordBtn').onclick=wordWorkshop;$('structureBtn').onclick=structureWorkshop;
-$('copyToRevisionBtn').onclick=()=>{$('revisionText').value=getPoemText();$('compareOutput').textContent='Salinan revisi siap. Ubah teks di kotak revisi; naskah asli belum berubah.'};
-$('compareBtn').onclick=()=>{const a=getPoemText(),b=$('revisionText').value.trim();if(!b){$('compareOutput').textContent='Isi ruang revisi terlebih dahulu.';return}const aw=countWords(a),bw=countWords(b);$('compareOutput').innerHTML='<b>Perbandingan sederhana:</b> naskah asli '+aw+' kata; revisi '+bw+' kata ('+(bw-aw>=0?'+':'')+(bw-aw)+' kata). Periksa perubahan makna, nada, citraan, dan suara penulis secara manual.'};
-$('applyRevisionBtn').onclick=()=>{const b=$('revisionText').value.trim();if(!b){alert('Ruang revisi masih kosong.');return}if(!confirm('Ganti teks puisi yang sedang terbuka dengan teks revisi? Sebaiknya simpan naskah asli terlebih dahulu.'))return;$('poem').innerText=b;updateStats();$('compareOutput').textContent='Revisi diterapkan ke editor. Tekan Simpan untuk menyimpan perubahan. Naskah tersimpan sebelumnya tidak diperbarui sampai Anda menekan Simpan.'};
-
-$('poem').addEventListener('input',updateStats);updateStats();renderWorks();$('makeBtn').click();')+'(?=[^\\p{L}]|$)','gu'))||[]).length})).filter(x=>x.n>=4).sort((a,b)=>b.n-a.n).slice(0,8);
- const generic=['indah','sedih','bahagia','cinta','rindu','gelap','terang','hati','jiwa','air mata','sunyi'];
- const common=generic.filter(w=>lower.includes(w));
- const end=nonempty.slice(-Math.min(3,nonempty.length)).join(' ');
- const positives=[];
- if(stanzas.length>=2)positives.push('Puisi memiliki pembagian bait yang memberi ruang jeda dan perkembangan gagasan.');
- if(words.length>=25)positives.push('Ada ruang untuk membangun suasana atau perkembangan makna, bukan hanya satu pernyataan singkat.');
- if(/[,:;—–]/.test(t))positives.push('Tanda baca memberi peluang mengatur jeda dan tekanan saat dibaca.');
- if(/[\\n]/.test(t))positives.push('Pemenggalan baris dapat digunakan untuk mengatur ritme dan penekanan.');
- if(!positives.length)positives.push('Naskah tersedia untuk dikembangkan; kekuatan paling tepat dinilai dengan membaca maksud dan konteks penulis.');
- const cautions=[];
- if(stanzas.length===1&&nonempty.length>6)cautions.push('Naskah hanya memiliki satu kelompok bait. Pertimbangkan pemisahan bait jika ada perubahan gagasan atau emosi.');
- if(words.length<20)cautions.push('Puisi cukup singkat; pastikan setiap kata membawa makna dan penutup terasa disengaja.');
- if(repeated.length)cautions.push('Kata yang cukup sering muncul: '+repeated.map(x=>x.w+' ('+x.n+'×)').join(', ')+'. Periksa apakah pengulangan itu sengaja sebagai motif atau justru berlebihan.');
- if(common.length)cautions.push('Kata atau gagasan yang sering dipakai dalam puisi: '+common.join(', ')+'. Jika terasa umum, tambahkan detail konkret atau citraan khas Anda.');
- if(!/[?!.…]$/.test(end.trim()))cautions.push('Penutup tidak memakai tanda akhir yang tegas. Ini bukan kesalahan, tetapi periksa apakah efek hening/terbuka memang disengaja.');
- if(stanzas.length>=5)cautions.push('Ada banyak bait; periksa apakah setiap bait membawa perkembangan baru dan tidak mengulang fungsi bait sebelumnya.');
- const focusText={umum:'Periksa hubungan judul, pembuka, perkembangan, klimaks, dan penutup.',diksi:'Pilih kata yang tepat dan konkret. Metafora yang kuat membuka makna; metafora berlapis yang tidak jelas dapat mengaburkan pesan.',struktur:'Periksa urutan bait: apakah gagasan dan emosi berkembang, berbelok, lalu mencapai titik yang terasa perlu?',keutuhan:'Tanyakan apakah judul dijawab atau diperdalam oleh isi, dan apakah penutup meninggalkan gema yang sesuai.',bunyi:'Baca lantang. Dengarkan panjang-pendek baris, bunyi yang berulang, jeda, dan kata yang terasa berat di lidah.'}[focus];
- $('reviewOutput').innerHTML='<h3>Bedah Puisi: '+escapeHtml(title||'Tanpa judul')+'</h3><p><b>Jenis:</b> '+escapeHtml(kind)+' · <b>'+words.length+' kata</b> · <b>'+nonempty.length+' baris</b> · <b>'+stanzas.length+' bait</b></p><h3>Kekuatan yang dapat dikembangkan</h3><ul>'+positives.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ul><h3>Hal yang perlu diperiksa</h3>'+(cautions.length?'<ul>'+cautions.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ul>':'<p>Tidak ada pola masalah sederhana yang menonjol. Bukan berarti puisi tidak perlu disunting; bacalah kembali untuk menilai ketepatan makna dan rasa.</p>')+'<h3>Saran sesuai fokus</h3><p>'+escapeHtml(focusText)+'</p><p><b>Pertanyaan penyunting:</b> bagian mana yang paling ingin pembaca ingat setelah selesai membaca?</p><p class="notice">Ulasan ini memakai pola teks sederhana dan tidak dapat memastikan mutu artistik atau maksud penulis hanya dari hitungan.</p>';
+function structureWorkshop(){
+ const t=getPoemText();if(!t){$('reviewOutput').innerHTML='<p>Tulis atau buka puisi terlebih dahulu.</p>';return}
+ analyzePoem();const stanzas=t.split(/\n\s*\n/).filter(x=>x.trim()),lines=t.split('\n').filter(x=>x.trim());
+ const notes=['Pembuka: apakah baris awal membangun suasana, citra, pertanyaan, atau konflik?','Perkembangan: apakah setiap bait menambahkan sesuatu atau mengulang gagasan?','Titik perubahan: adakah perubahan emosi atau makna yang terasa penting?','Penutup: apakah akhir terasa tumbuh dari perjalanan puisi, bukan sekadar menjelaskan pesan?','Bentuk: baca lantang untuk menguji jeda, panjang baris, dan perpindahan bait.'];
+ $('reviewOutput').innerHTML+='<h3>Daftar periksa struktur ('+stanzas.length+' bait, '+lines.length+' baris)</h3><ol>'+notes.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ol>';
 }
-function escapeHtml(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function wordWorkshop(){
- const t=getPoemText(); if(!t){$('wordOutput').innerHTML='<h3>Bengkel Kata</h3><p>Tulis atau buka puisi terlebih dahulu.</p>';return}
- const patterns=[
- [/\\b(sangat indah|indah sekali)\\b/gi,'coba ganti penilaian umum dengan detail yang bisa dilihat, didengar, disentuh, atau diingat'],
- [/\\b(aku sedih|hatiku sedih|merasa sedih)\\b/gi,'coba tampilkan tanda atau tindakan yang membuat pembaca merasakan kesedihan'],
- [/\\b(aku rindu|merindukan)\\b/gi,'coba hadirkan benda, tempat, kebiasaan, atau suara yang menjadi wujud rindu'],
- [/\\b(dalam kegelapan|malam yang gelap)\\b/gi,'coba pilih detail malam yang khas agar suasana tidak terasa generik'],
- [/\\b(air mata)\\b/gi,'periksa apakah air mata diperlukan atau emosi bisa disampaikan lewat gestur/citraan yang lebih pribadi'],
- [/\\b(aku merasa)\\b/gi,'pertimbangkan menghapus “aku merasa” dan langsung menghadirkan pengalaman atau citra'],
- [/\\b(sangat|begitu)\\b/gi,'uji apakah kata penguat ini diperlukan; kata kerja atau citraan yang tepat mungkin lebih kuat']
- ];
- const found=[];patterns.forEach(([re,msg])=>{const m=t.match(re);if(m)found.push('<li><b>'+escapeHtml(m[0])+'</b> — '+escapeHtml(msg)+'.</li>')});
- const ws=t.match(/[\\p{L}\\p{N}’'-]+/gu)||[], low=t.toLocaleLowerCase('id-ID');
- const rep=[...new Set(ws.map(w=>w.toLocaleLowerCase('id-ID')).filter(w=>w.length>3))].map(w=>({w,n:(low.match(new RegExp('(^|[^\\p{L}])'+w+'(?=[^\\p{L}]|$)','gu'))||[]).length})).filter(x=>x.n>=3).sort((a,b)=>b.n-a.n).slice(0,8);
- if(rep.length)found.push('<li><b>Pengulangan:</b> '+rep.map(x=>escapeHtml(x.w)+' ('+x.n+'×)').join(', ')+'. Tentukan mana yang menjadi motif sengaja dan mana yang bisa diganti.</li>');
- $('wordOutput').innerHTML='<h3>Bengkel Kata</h3>'+(found.length?'<p>Petunjuk yang mungkin relevan:</p><ul>'+found.join('')+'</ul>':'<p>Tidak ditemukan frasa umum dari daftar pemeriksaan dasar. Baca lantang dan tandai kata yang terasa abstrak, berulang, atau kurang tepat bagi maksud Anda.</p>')+'<p><b>Prinsip:</b> jangan mengganti kata hanya demi terdengar indah; pilih kata yang paling setia pada maksud dan suara penulis.</p>';
-}
-function structureWorkshop(){analyzePoem();const t=getPoemText(),stanzas=t.split(/\\n\\s*\\n/).filter(x=>x.trim()),lines=t.split(/\\n/).filter(x=>x.trim());if(!t)return;const notes=[];notes.push('Pembuka: apakah baris awal membangun suasana, pertanyaan, citra, atau konflik yang menarik?');notes.push('Perkembangan: apakah setiap bait menambahkan sesuatu, atau mengulang gagasan yang sama?');notes.push('Klimaks: tandai baris dengan tekanan emosi atau perubahan makna paling kuat. Tidak semua puisi membutuhkan klimaks dramatis.');notes.push('Penutup: apakah akhir terasa diperoleh dari perjalanan puisi, bukan sekadar menjelaskan pesan?');notes.push('Bentuk: baca lantang untuk menguji jeda, panjang baris, dan perpindahan antarbait.');$('reviewOutput').innerHTML+='<h3>Daftar periksa struktur ('+stanzas.length+' bait, '+lines.length+' baris)</h3><ol>'+notes.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ol>';}
-$('reviewBtn').onclick=analyzePoem;$('wordBtn').onclick=wordWorkshop;$('structureBtn').onclick=structureWorkshop;
-$('copyToRevisionBtn').onclick=()=>{$('revisionText').value=getPoemText();$('compareOutput').textContent='Salinan revisi siap. Ubah teks di kotak revisi; naskah asli belum berubah.'};
-$('compareBtn').onclick=()=>{const a=getPoemText(),b=$('revisionText').value.trim();if(!b){$('compareOutput').textContent='Isi ruang revisi terlebih dahulu.';return}const aw=countWords(a),bw=countWords(b);$('compareOutput').innerHTML='<b>Perbandingan sederhana:</b> naskah asli '+aw+' kata; revisi '+bw+' kata ('+(bw-aw>=0?'+':'')+(bw-aw)+' kata). Periksa perubahan makna, nada, citraan, dan suara penulis secara manual.'};
-$('applyRevisionBtn').onclick=()=>{const b=$('revisionText').value.trim();if(!b){alert('Ruang revisi masih kosong.');return}if(!confirm('Ganti teks puisi yang sedang terbuka dengan teks revisi? Sebaiknya simpan naskah asli terlebih dahulu.'))return;$('poem').innerText=b;updateStats();$('compareOutput').textContent='Revisi diterapkan ke editor. Tekan Simpan untuk menyimpan perubahan. Naskah tersimpan sebelumnya tidak diperbarui sampai Anda menekan Simpan.'};
+$('reviewBtn').addEventListener('click',analyzePoem);
+$('wordBtn').addEventListener('click',wordWorkshop);
+$('structureBtn').addEventListener('click',structureWorkshop);
+$('copyToRevisionBtn').addEventListener('click',()=>{$('revisionText').value=getPoemText();$('compareOutput').textContent='Salinan revisi siap. Naskah asli belum berubah.'});
+$('compareBtn').addEventListener('click',()=>{const a=getPoemText(),b=$('revisionText').value.trim();if(!b){$('compareOutput').textContent='Isi ruang revisi terlebih dahulu.';return}const aw=countWords(a),bw=countWords(b);$('compareOutput').textContent='Naskah asli '+aw+' kata; revisi '+bw+' kata ('+(bw-aw>=0?'+':'')+(bw-aw)+' kata). Periksa juga makna, nada, citraan, dan suara penulis.'});
+$('applyRevisionBtn').addEventListener('click',()=>{const b=$('revisionText').value.trim();if(!b){alert('Ruang revisi masih kosong.');return}if(!confirm('Ganti teks puisi yang sedang terbuka dengan teks revisi? Sebaiknya simpan naskah asli terlebih dahulu.'))return;$('poem').innerText=b;updateStats();$('compareOutput').textContent='Revisi diterapkan ke editor. Tekan Simpan untuk menyimpan perubahan.'});
 
 $('poem').addEventListener('input',updateStats);updateStats();renderWorks();$('makeBtn').click();
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installBtn').classList.remove('hidden')});$('installBtn').onclick=async()=>{if(deferredInstall){deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null}else alert('Buka menu Chrome ⋮ lalu pilih Tambahkan ke layar utama atau Instal aplikasi.')};
