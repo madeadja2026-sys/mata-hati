@@ -1,0 +1,12 @@
+{
+  "name": "Studio Puisi",
+  "short_name": "Studio Puisi",
+  "description": "Ruang kreatif untuk menyusun, mengolah, dan menyimpan puisi.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f7ff",
+  "theme_color": "#111b46",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
