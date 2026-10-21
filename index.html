@@ -421,12 +421,56 @@ addEventListener('hashchange',openHashArticle);
 
 function loadCMS(){
  const url=window.MATA_HATI_CMS_API;
- if(!url){renderCMS(loadOffline(),true);return}
- const cb='mataHatiCMS';
- window[cb]=data=>{try{if(data&&data.ok){renderCMS(data.items||[]);setupFeatured();drawPortalSections()}}finally{delete window[cb];if(script.parentNode)script.remove()}};
- const script=document.createElement('script');
+ const offlineBox=document.getElementById('offline');
+ const loadingTargets=['contentSummary','latestGrid','trendingGrid','galleryGrid','videoGrid'];
+ let settled=false;
+ if(!url){const cached=loadOffline();renderCMS(cached,true);setupFeatured();if(offlineBox)offlineBox.classList.add('show');return}
+ const cb='mataHatiCMS_'+Date.now();
+ let script=null;
+ const finishOffline=()=>{
+   if(settled)return;
+   settled=true;
+   const cached=loadOffline();
+   if(cached.length){renderCMS(cached,true);setupFeatured();drawPortalSections()}
+   if(offlineBox)offlineBox.classList.add('show');
+   loadingTargets.forEach(id=>{
+     const el=document.getElementById(id);
+     if(el && /Memuat|Menyusun rekomendasi/i.test(el.textContent)) el.textContent='Konten belum berhasil dimuat. Periksa koneksi CMS lalu tekan Muat Ulang.';
+   });
+   const host=document.getElementById('contentSummary');
+   if(host && !document.getElementById('cmsRetryBtn')){
+     const b=document.createElement('button');
+     b.id='cmsRetryBtn';b.className='ghost';b.textContent='↻ Muat Ulang Konten';
+     b.style.marginTop='8px';b.onclick=()=>{b.remove();loadCMS()};
+     host.appendChild(document.createElement('br'));host.appendChild(b);
+   }
+   delete window[cb];
+   if(script&&script.parentNode)script.remove();
+ };
+ window[cb]=data=>{
+   if(settled)return;
+   if(!data||data.ok!==true){finishOffline();return}
+   settled=true;
+   try{
+     renderCMS(Array.isArray(data.items)?data.items:[]);
+     setupFeatured();
+     drawPortalSections();
+     if(offlineBox)offlineBox.classList.remove('show');
+   }catch(err){
+     console.error('MATA HATI CMS render error:',err);
+     finishOffline();
+   }finally{
+     delete window[cb];
+     if(script&&script.parentNode)script.remove();
+   }
+ };
+ script=document.createElement('script');
+ script.async=true;
  script.src=url+(url.includes('?')?'&':'?')+'action=public&callback='+cb;
- script.onerror=()=>{const cached=loadOffline();if(cached.length){renderCMS(cached,true);setupFeatured();drawPortalSections()}document.getElementById('offline').classList.add('show');delete window[cb];if(script.parentNode)script.remove()};
+ script.onerror=finishOffline;
+ const timer=setTimeout(()=>{if(!settled)finishOffline()},18000);
+ const previous=window[cb];
+ window[cb]=data=>{clearTimeout(timer);previous(data)};
  document.head.appendChild(script);
 }
 
