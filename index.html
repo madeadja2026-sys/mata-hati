@@ -278,7 +278,17 @@ function chooseBookmarkFolder(id){const existing=foldersFor(id);const label='Pil
 function trackRead(id){const k=String(id||'');if(!k)return;const now=Date.now();readEvents.push({id:k,ts:now});pruneReads();readCounts={};readEvents.forEach(e=>{readCounts[e.id]=(readCounts[e.id]||0)+1});const old=historyItems.findIndex(e=>String(e.id)===k);if(old>=0)historyItems.splice(old,1);historyItems.unshift({id:k,ts:now,progress:historyItems[old]?.progress||0});historyItems=historyItems.slice(0,30);persistPersonal()}
 function updateReadProgress(){const reader=document.querySelector('.reader');const x=visibleItems[currentIndex];if(!reader||!x)return;const max=reader.scrollHeight-reader.clientHeight;const p=max>0?Math.round(reader.scrollTop/max*100):0;const h=historyItems.find(e=>String(e.id)===String(x.ID));if(h){h.progress=Math.max(0,Math.min(100,p));h.ts=Date.now();persistPersonal()}}
 function youtubeId(url){const s=String(url||'');const m=s.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{6,})/);return m?m[1]:''}
-function saveOffline(){try{localStorage.setItem(CACHE_KEY,JSON.stringify(cmsItems))}catch(e){}}
+function saveOffline(){
+ try{
+   // Keep local cache small; base64 image payloads can exceed mobile localStorage limits.
+   const compact=cmsItems.map(x=>{
+     const y={...x};
+     delete y.MediaDataURL;
+     return y;
+   });
+   localStorage.setItem(CACHE_KEY,JSON.stringify(compact));
+ }catch(e){}
+}
 function loadOffline(){try{const x=JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
 
 function renderCMS(items,offline=false){
@@ -422,56 +432,67 @@ addEventListener('hashchange',openHashArticle);
 function loadCMS(){
  const url=window.MATA_HATI_CMS_API;
  const offlineBox=document.getElementById('offline');
- const loadingTargets=['contentSummary','latestGrid','trendingGrid','galleryGrid','videoGrid'];
- let settled=false;
- if(!url){const cached=loadOffline();renderCMS(cached,true);setupFeatured();if(offlineBox)offlineBox.classList.add('show');return}
- const cb='mataHatiCMS_'+Date.now();
- let script=null;
- const finishOffline=()=>{
-   if(settled)return;
-   settled=true;
-   const cached=loadOffline();
-   if(cached.length){renderCMS(cached,true);setupFeatured();drawPortalSections()}
+ const summary=document.getElementById('contentSummary');
+ if(!url){
+   const cached=loadOffline();renderCMS(cached,true);setupFeatured();
    if(offlineBox)offlineBox.classList.add('show');
-   loadingTargets.forEach(id=>{
-     const el=document.getElementById(id);
-     if(el && /Memuat|Menyusun rekomendasi/i.test(el.textContent)) el.textContent='Konten belum berhasil dimuat. Periksa koneksi CMS lalu tekan Muat Ulang.';
-   });
-   const host=document.getElementById('contentSummary');
-   if(host && !document.getElementById('cmsRetryBtn')){
+   return;
+ }
+ // Use a stable JSONP callback name; the API has been verified with this style of callback.
+ const cb='mataHatiCMS';
+ let settled=false;
+ let script=null;
+ let timer=null;
+ const showRetry=()=>{
+   if(summary && !document.getElementById('cmsRetryBtn')){
      const b=document.createElement('button');
      b.id='cmsRetryBtn';b.className='ghost';b.textContent='↻ Muat Ulang Konten';
      b.style.marginTop='8px';b.onclick=()=>{b.remove();loadCMS()};
-     host.appendChild(document.createElement('br'));host.appendChild(b);
+     summary.appendChild(document.createElement('br'));summary.appendChild(b);
    }
-   delete window[cb];
+ };
+ const fallback=()=>{
+   if(settled)return;
+   settled=true;
+   const cached=loadOffline();
+   if(cached.length){
+     renderCMS(cached,true);setupFeatured();drawPortalSections();
+   }else{
+     ['latestGrid','trendingGrid','galleryGrid','videoGrid'].forEach(id=>{
+       const el=document.getElementById(id);
+       if(el && /Memuat|Menyusun/i.test(el.textContent)) el.textContent='Konten belum berhasil dimuat. Silakan tekan Muat Ulang Konten.';
+     });
+   }
+   if(offlineBox)offlineBox.classList.add('show');
+   showRetry();
+   cleanup();
+ };
+ const cleanup=()=>{
+   if(timer)clearTimeout(timer);
    if(script&&script.parentNode)script.remove();
+   try{delete window[cb]}catch(e){window[cb]=undefined}
  };
  window[cb]=data=>{
    if(settled)return;
-   if(!data||data.ok!==true){finishOffline();return}
+   if(!data || data.ok!==true){fallback();return}
    settled=true;
    try{
      renderCMS(Array.isArray(data.items)?data.items:[]);
      setupFeatured();
      drawPortalSections();
      if(offlineBox)offlineBox.classList.remove('show');
+     const retry=document.getElementById('cmsRetryBtn');if(retry)retry.remove();
    }catch(err){
      console.error('MATA HATI CMS render error:',err);
      settled=false;
-     finishOffline();
-   }finally{
-     delete window[cb];
-     if(script&&script.parentNode)script.remove();
-   }
+     fallback();
+   }finally{cleanup()}
  };
  script=document.createElement('script');
  script.async=true;
- script.src=url+(url.includes('?')?'&':'?')+'action=public&callback='+cb;
- script.onerror=finishOffline;
- const timer=setTimeout(()=>{if(!settled)finishOffline()},18000);
- const previous=window[cb];
- window[cb]=data=>{clearTimeout(timer);previous(data)};
+ script.src=url+(url.includes('?')?'&':'?')+'action=public&callback='+cb+'&_='+Date.now();
+ script.onerror=fallback;
+ timer=setTimeout(fallback,15000);
  document.head.appendChild(script);
 }
 
