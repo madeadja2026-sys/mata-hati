@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "CERITAKU Studio",
+  "short_name": "CERITAKU",
+  "description": "Studio sederhana untuk membangun cerita, skenario, storyboard, dan paket publikasi.",
+  "lang": "id-ID",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f7fb",
+  "theme_color": "#15283b",
+  "categories": [
+    "productivity",
+    "entertainment",
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
